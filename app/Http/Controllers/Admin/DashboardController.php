@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\OrangTua;
 
 class DashboardController extends Controller
 {
@@ -14,8 +15,7 @@ class DashboardController extends Controller
         $totalJurusan = Jurusan::count();
         $totalKelas = Kelas::count();
         $totalSiswa = Siswa::count();
-
-        $totalOrangTua = 0;
+        $totalOrangTua = OrangTua::count();
 
         return view('admin.dashboard', compact(
             'totalJurusan',
