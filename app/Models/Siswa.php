@@ -26,7 +26,7 @@ class Siswa extends Model
         return $this->hasMany(OrangTua::class);
     }
 
-    public function angketHarian()
+   public function angketHarians()
     {
         return $this->hasMany(AngketHarian::class);
     }

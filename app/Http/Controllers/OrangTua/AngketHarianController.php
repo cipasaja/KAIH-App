@@ -35,10 +35,10 @@ class AngketHarianController extends Controller
             ->orderByDesc('tanggal')
             ->get();
 
-        return view('orangtua.angket.index', compact(
-            'angket',
-            'orangTua'
-        ));
+       return view('admin.orangtua.angket.create', compact(
+        'orangTua',
+        'siswa'
+    ));
     }
 
 
