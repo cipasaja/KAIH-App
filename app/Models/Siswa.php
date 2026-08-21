@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Kelas;
-use App\Models\OrangTua;
-use App\Models\AngketHarian;
 
 class Siswa extends Model
 {
@@ -31,6 +28,6 @@ class Siswa extends Model
 
     public function angketHarian()
     {
-        return $this->hasMany(AngketHarian::class, 'siswa_id');
+        return $this->hasMany(AngketHarian::class);
     }
 }

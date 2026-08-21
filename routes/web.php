@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JurusanController;
 use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\OrangTuaController;
+
 use App\Http\Controllers\OrangTua\DashboardController as OrangTuaDashboardController;
+use App\Http\Controllers\OrangTua\AngketHarianController;
 
 
 /*
@@ -27,10 +30,6 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 | Dashboard Redirect
 |--------------------------------------------------------------------------
-|
-| Setelah login, route /dashboard akan mengarahkan user
-| berdasarkan role akun.
-|
 */
 
 Route::get('/dashboard', function () {
@@ -72,10 +71,6 @@ Route::post('/logout', function () {
 |--------------------------------------------------------------------------
 | ADMIN
 |--------------------------------------------------------------------------
-|
-| Semua route di dalam group ini hanya bisa diakses oleh:
-| role = admin
-|
 */
 
 Route::middleware(['auth', 'role:admin'])
@@ -83,9 +78,7 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         /*
-        |--------------------------------------------------------------------------
-        | Dashboard Admin
-        |--------------------------------------------------------------------------
+        | Dashboard
         */
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
@@ -93,9 +86,7 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |--------------------------------------------------------------------------
         | Jurusan
-        |--------------------------------------------------------------------------
         */
 
         Route::resource('/jurusan', JurusanController::class)
@@ -103,9 +94,7 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |--------------------------------------------------------------------------
         | Kelas
-        |--------------------------------------------------------------------------
         */
 
         Route::get('/kelas/export', [KelasController::class, 'export'])
@@ -119,9 +108,7 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |--------------------------------------------------------------------------
         | Siswa
-        |--------------------------------------------------------------------------
         */
 
         Route::get('/siswa', [SiswaController::class, 'index'])
@@ -150,9 +137,7 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |--------------------------------------------------------------------------
         | Orang Tua
-        |--------------------------------------------------------------------------
         */
 
         Route::get('/orang-tua', [OrangTuaController::class, 'index'])
@@ -182,17 +167,31 @@ Route::middleware(['auth', 'role:admin'])
 |--------------------------------------------------------------------------
 | ORANG TUA
 |--------------------------------------------------------------------------
-|
-| Dashboard ini hanya bisa diakses oleh:
-| role = orang_tua
-|
 */
 
 Route::middleware(['auth', 'role:orang_tua'])
     ->group(function () {
 
+        /*
+        | Dashboard Orang Tua
+        */
+
         Route::get('/orang-tua/dashboard', [OrangTuaDashboardController::class, 'index'])
             ->name('orangtua.dashboard');
+
+
+        /*
+        | Angket Harian
+        */
+
+        Route::get('/orang-tua/angket', [AngketHarianController::class, 'index'])
+            ->name('orangtua.angket.index');
+
+        Route::get('/orang-tua/angket/create', [AngketHarianController::class, 'create'])
+            ->name('orangtua.angket.create');
+
+        Route::post('/orang-tua/angket', [AngketHarianController::class, 'store'])
+            ->name('orangtua.angket.store');
     });
 
 
@@ -200,10 +199,6 @@ Route::middleware(['auth', 'role:orang_tua'])
 |--------------------------------------------------------------------------
 | PROFILE
 |--------------------------------------------------------------------------
-|
-| Profile bisa diakses oleh user yang sudah login,
-| baik admin maupun orang tua.
-|
 */
 
 Route::middleware('auth')->group(function () {

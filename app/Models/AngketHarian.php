@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AngketHarian extends Model
 {
+    use HasFactory;
+
     protected $table = 'angket_harian';
 
     protected $fillable = [
@@ -32,19 +34,13 @@ class AngketHarian extends Model
         'belajar' => 'boolean',
     ];
 
-    /**
-     * Angket ini diisi oleh orang tua.
-     */
-    public function orangTua(): BelongsTo
+    public function orangTua()
     {
-        return $this->belongsTo(OrangTua::class, 'orang_tua_id');
+        return $this->belongsTo(OrangTua::class);
     }
 
-    /**
-     * Angket ini berkaitan dengan siswa.
-     */
-    public function siswa(): BelongsTo
+    public function siswa()
     {
-        return $this->belongsTo(Siswa::class, 'siswa_id');
+        return $this->belongsTo(Siswa::class);
     }
 }
