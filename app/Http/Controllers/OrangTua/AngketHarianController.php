@@ -4,104 +4,94 @@ namespace App\Http\Controllers\OrangTua;
 
 use App\Http\Controllers\Controller;
 use App\Models\AngketHarian;
-use App\Models\OrangTua;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AngketHarianController extends Controller
 {
     /**
-     * Menampilkan riwayat angket harian.
+     * Halaman daftar / riwayat angket
      */
     public function index()
     {
         $user = Auth::user();
 
-        // Ambil data orang tua berdasarkan akun yang sedang login
-        $orangTua = OrangTua::where('id', $user->orang_tua_id)
-            ->with('siswa')
+        $orangTua = $user->orangTua()
+            ->with('siswa.kelas')
             ->first();
 
-        // Kalau akun belum terhubung dengan data orang tua
         if (!$orangTua) {
-            return redirect()
-                ->route('orangtua.dashboard')
-                ->with('error', 'Akun orang tua belum terhubung dengan data orang tua.');
+            abort(403, 'Akun orang tua belum terhubung dengan data orang tua.');
         }
 
-        // Ambil semua angket milik siswa tersebut
+        $siswa = $orangTua->siswa;
+
+        if (!$siswa) {
+            abort(403, 'Data siswa belum terhubung dengan orang tua.');
+        }
+
+        // Ambil riwayat angket milik anak ini
         $angket = AngketHarian::where('orang_tua_id', $orangTua->id)
-            ->where('siswa_id', $orangTua->siswa_id)
+            ->where('siswa_id', $siswa->id)
             ->orderByDesc('tanggal')
             ->get();
 
-       return view('admin.orangtua.angket.create', compact(
-        'orangTua',
-        'siswa'
-    ));
-    }
-
-
-    /**
-     * Menampilkan form pengisian angket.
-     */
-    public function create()
-    {
-        $user = Auth::user();
-
-        // Ambil data orang tua
-        $orangTua = OrangTua::where('id', $user->orang_tua_id)
-            ->with('siswa')
-            ->first();
-
-        if (!$orangTua) {
-            return redirect()
-                ->route('orangtua.dashboard')
-                ->with('error', 'Akun orang tua belum terhubung dengan data orang tua.');
-        }
-
-        // Pastikan orang tua memiliki siswa
-        if (!$orangTua->siswa) {
-            return redirect()
-                ->route('orangtua.dashboard')
-                ->with('error', 'Data siswa/anak belum terhubung dengan orang tua.');
-        }
-
-        return view('orangtua.angket.create', compact(
-            'orangTua'
+        return view('admin.orangtua.angket.index', compact(
+            'orangTua',
+            'siswa',
+            'angket'
         ));
     }
 
 
     /**
-     * Menyimpan angket harian.
+     * Form angket hari ini
+     */
+    public function create()
+    {
+        $user = Auth::user();
+
+        $orangTua = $user->orangTua()
+            ->with('siswa.kelas')
+            ->first();
+
+        if (!$orangTua) {
+            abort(403, 'Akun orang tua belum terhubung dengan data orang tua.');
+        }
+
+        $siswa = $orangTua->siswa;
+
+        if (!$siswa) {
+            abort(403, 'Data siswa belum terhubung dengan orang tua.');
+        }
+
+        return view('admin.orangtua.angket.create', compact(
+            'orangTua',
+            'siswa'
+        ));
+    }
+
+
+    /**
+     * Simpan angket
      */
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        // Ambil data orang tua
-        $orangTua = OrangTua::where('id', $user->orang_tua_id)
+        $orangTua = $user->orangTua()
             ->with('siswa')
             ->first();
 
         if (!$orangTua) {
-            return redirect()
-                ->route('orangtua.dashboard')
-                ->with('error', 'Akun orang tua belum terhubung dengan data orang tua.');
+            abort(403, 'Akun orang tua belum terhubung dengan data orang tua.');
         }
 
-        if (!$orangTua->siswa) {
-            return redirect()
-                ->route('orangtua.dashboard')
-                ->with('error', 'Data siswa/anak belum terhubung dengan orang tua.');
-        }
+        $siswa = $orangTua->siswa;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Validasi
-        |--------------------------------------------------------------------------
-        */
+        if (!$siswa) {
+            abort(403, 'Data siswa belum terhubung dengan orang tua.');
+        }
 
         $validated = $request->validate([
             'tanggal' => [
@@ -127,7 +117,6 @@ class AngketHarianController extends Controller
             'kegiatan_membantu' => [
                 'nullable',
                 'string',
-                'max:1000',
             ],
 
             'sholat_magrib' => [
@@ -152,61 +141,59 @@ class AngketHarianController extends Controller
         ]);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cek apakah tanggal sudah pernah diisi
-        |--------------------------------------------------------------------------
-        */
-
-        $sudahAda = AngketHarian::where('siswa_id', $orangTua->siswa_id)
+        // Cek apakah tanggal tersebut sudah pernah diisi
+        $sudahAda = AngketHarian::where('orang_tua_id', $orangTua->id)
+            ->where('siswa_id', $siswa->id)
             ->where('tanggal', $validated['tanggal'])
             ->exists();
 
         if ($sudahAda) {
             return back()
                 ->withInput()
-                ->with('error', 'Angket untuk tanggal tersebut sudah pernah diisi.');
+                ->with(
+                    'error',
+                    'Angket untuk tanggal tersebut sudah pernah diisi.'
+                );
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Simpan data
-        |--------------------------------------------------------------------------
-        */
+        // Simpan
+        AngketHarian::create([
+            'orang_tua_id' => $orangTua->id,
+            'siswa_id' => $siswa->id,
+            'tanggal' => $validated['tanggal'],
 
-        $angket = new AngketHarian();
+            'bangun_pagi' =>
+                $validated['bangun_pagi'] ?? null,
 
-        $angket->orang_tua_id = $orangTua->id;
-        $angket->siswa_id = $orangTua->siswa_id;
+            'sholat_subuh' =>
+                $validated['sholat_subuh'] ?? null,
 
-        $angket->tanggal = $validated['tanggal'];
-        $angket->bangun_pagi = $validated['bangun_pagi'] ?? null;
+            'sholat_ashar' =>
+                $validated['sholat_ashar'] ?? null,
 
-        $angket->sholat_subuh = $request->boolean('sholat_subuh');
-        $angket->sholat_ashar = $request->boolean('sholat_ashar');
+            'kegiatan_membantu' =>
+                $validated['kegiatan_membantu'] ?? null,
 
-        $angket->kegiatan_membantu =
-            $validated['kegiatan_membantu'] ?? null;
+            'sholat_magrib' =>
+                $validated['sholat_magrib'] ?? null,
 
-        $angket->sholat_magrib = $request->boolean('sholat_magrib');
-        $angket->sholat_isya = $request->boolean('sholat_isya');
+            'sholat_isya' =>
+                $validated['sholat_isya'] ?? null,
 
-        $angket->belajar = $request->boolean('belajar');
+            'belajar' =>
+                $validated['belajar'] ?? null,
 
-        $angket->tidur_malam = $validated['tidur_malam'] ?? null;
+            'tidur_malam' =>
+                $validated['tidur_malam'] ?? null,
+        ]);
 
-        $angket->save();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Kembali ke riwayat
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->route('orangtua.angket.index')
-            ->with('success', 'Angket harian berhasil disimpan.');
+            ->with(
+                'success',
+                'Angket harian berhasil disimpan.'
+            );
     }
 }

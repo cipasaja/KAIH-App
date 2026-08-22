@@ -68,7 +68,7 @@ class AngketHarianController extends Controller
                 ->with('error', 'Data siswa belum terhubung dengan orang tua ini.');
         }
 
-        return view('orangtua.angket.create', compact(
+        return view('admin.orangtua.angket.create', compact(
             'user',
             'orangTua',
             'siswa'
