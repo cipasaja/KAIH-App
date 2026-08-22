@@ -1,4 +1,8 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
+
+@section('title', 'Isi Angket Harian')
+
+@section('page-title', 'Isi Angket Harian')
 
 @section('content')
 
@@ -6,7 +10,6 @@
 
     {{-- HEADER --}}
     <div class="mb-8">
-
         <p class="text-sm font-medium text-indigo-600 mb-1">
             KAIH App
         </p>
@@ -18,35 +21,26 @@
         <p class="text-gray-500 mt-2">
             Isi kebiasaan harian anak.
         </p>
-
     </div>
 
 
     {{-- ERROR --}}
     @if($errors->any())
-
-        <div class="mb-6 bg-red-50 border border-red-200
-                    text-red-700 px-5 py-4 rounded-xl">
-
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-xl">
             <ul class="list-disc ml-5">
-
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
-
             </ul>
-
         </div>
-
     @endif
 
 
     {{-- FORM --}}
-    <div class="bg-white rounded-2xl shadow-sm
-                border border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
 
+        {{-- DATA ANAK --}}
         <div class="mb-6">
-
             <h2 class="text-xl font-bold text-gray-800">
                 Data Anak
             </h2>
@@ -55,7 +49,6 @@
                 {{ $orangTua->siswa->nama_siswa }}
                 — NIS {{ $orangTua->siswa->nis }}
             </p>
-
         </div>
 
 
@@ -78,27 +71,32 @@
                     type="date"
                     name="tanggal"
                     value="{{ old('tanggal', date('Y-m-d')) }}"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                 >
 
             </div>
 
 
-            {{-- BANGUN PAGI --}}
+            {{-- JAM BANGUN PAGI --}}
             <div class="mb-5">
 
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Jam Bangun Pagi
                 </label>
 
+                <p class="text-xs text-gray-400 mb-2">
+                    Gunakan format 24 jam. Contoh: 04:30
+                </p>
+
                 <input
                     type="time"
                     name="bangun_pagi"
                     value="{{ old('bangun_pagi') }}"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    min="00:00"
+                    max="23:59"
+                    step="60"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
 
             </div>
@@ -113,8 +111,8 @@
 
                 <div class="grid sm:grid-cols-2 gap-3">
 
-                    <label class="flex items-center gap-3 p-3
-                                  border rounded-xl cursor-pointer">
+                    {{-- SUBUH --}}
+                    <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-indigo-50">
 
                         <input
                             type="checkbox"
@@ -123,13 +121,15 @@
                             {{ old('sholat_subuh') ? 'checked' : '' }}
                         >
 
-                        <span>Sholat Subuh</span>
+                        <span>
+                            Sholat Subuh
+                        </span>
 
                     </label>
 
 
-                    <label class="flex items-center gap-3 p-3
-                                  border rounded-xl cursor-pointer">
+                    {{-- ASHAR --}}
+                    <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-indigo-50">
 
                         <input
                             type="checkbox"
@@ -138,13 +138,15 @@
                             {{ old('sholat_ashar') ? 'checked' : '' }}
                         >
 
-                        <span>Sholat Ashar</span>
+                        <span>
+                            Sholat Ashar
+                        </span>
 
                     </label>
 
 
-                    <label class="flex items-center gap-3 p-3
-                                  border rounded-xl cursor-pointer">
+                    {{-- MAGRIB --}}
+                    <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-indigo-50">
 
                         <input
                             type="checkbox"
@@ -153,13 +155,15 @@
                             {{ old('sholat_magrib') ? 'checked' : '' }}
                         >
 
-                        <span>Sholat Magrib</span>
+                        <span>
+                            Sholat Magrib
+                        </span>
 
                     </label>
 
 
-                    <label class="flex items-center gap-3 p-3
-                                  border rounded-xl cursor-pointer">
+                    {{-- ISYA --}}
+                    <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-indigo-50">
 
                         <input
                             type="checkbox"
@@ -168,7 +172,9 @@
                             {{ old('sholat_isya') ? 'checked' : '' }}
                         >
 
-                        <span>Sholat Isya</span>
+                        <span>
+                            Sholat Isya
+                        </span>
 
                     </label>
 
@@ -187,8 +193,7 @@
                 <textarea
                     name="kegiatan_membantu"
                     rows="4"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     placeholder="Contoh: membantu membersihkan rumah..."
                 >{{ old('kegiatan_membantu') }}</textarea>
 
@@ -204,7 +209,9 @@
 
                 <div class="flex gap-4">
 
+                    {{-- YA --}}
                     <label class="flex items-center gap-2">
+
                         <input
                             type="radio"
                             name="belajar"
@@ -212,11 +219,16 @@
                             {{ old('belajar') === '1' ? 'checked' : '' }}
                         >
 
-                        <span>Ya</span>
+                        <span>
+                            Ya
+                        </span>
+
                     </label>
 
 
+                    {{-- TIDAK --}}
                     <label class="flex items-center gap-2">
+
                         <input
                             type="radio"
                             name="belajar"
@@ -224,7 +236,10 @@
                             {{ old('belajar') === '0' ? 'checked' : '' }}
                         >
 
-                        <span>Tidak</span>
+                        <span>
+                            Tidak
+                        </span>
+
                     </label>
 
                 </div>
@@ -232,19 +247,25 @@
             </div>
 
 
-            {{-- TIDUR --}}
+            {{-- JAM TIDUR MALAM --}}
             <div class="mb-6">
 
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Jam Tidur Malam
                 </label>
 
+                <p class="text-xs text-gray-400 mb-2">
+                    Gunakan format 24 jam. Contoh: 21:00
+                </p>
+
                 <input
                     type="time"
                     name="tidur_malam"
                     value="{{ old('tidur_malam') }}"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    min="00:00"
+                    max="23:59"
+                    step="60"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
 
             </div>
@@ -255,9 +276,7 @@
 
                 <a
                     href="{{ route('orangtua.angket.index') }}"
-                    class="px-5 py-3 rounded-xl
-                           bg-gray-100 hover:bg-gray-200
-                           text-gray-700 font-semibold"
+                    class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold"
                 >
                     Kembali
                 </a>
@@ -265,9 +284,7 @@
 
                 <button
                     type="submit"
-                    class="px-5 py-3 rounded-xl
-                           bg-indigo-600 hover:bg-indigo-700
-                           text-white font-semibold"
+                    class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
                 >
                     Simpan Angket
                 </button>
