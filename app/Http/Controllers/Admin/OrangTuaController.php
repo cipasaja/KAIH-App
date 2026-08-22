@@ -17,7 +17,7 @@ class OrangTuaController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.orangtua.index', compact('orangTuas'));
+        return view('orangtua.index', compact('orangTuas'));
     }
 
     public function create()
