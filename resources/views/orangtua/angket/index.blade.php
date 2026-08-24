@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('orangtua.layouts.app')
+
+@section('title', 'Angket Harian')
 
 @section('content')
 

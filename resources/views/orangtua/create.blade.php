@@ -1,298 +1,357 @@
-@extends('admin.layouts.app')
+<!DOCTYPE html>
+<html lang="id">
 
-@section('content')
+<head>
+    <meta charset="UTF-8">
 
-<div class="max-w-3xl mx-auto">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    {{-- Header --}}
-    <div class="mb-8">
+    <title>
+        Dashboard Orang Tua - KAIH App
+    </title>
 
-        <h2 class="text-3xl font-bold text-gray-800">
-            Tambah Orang Tua
-        </h2>
-
-        <p class="text-gray-500 mt-1">
-            Tambahkan data orang tua atau wali siswa.
-        </p>
-
-    </div>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
 
 
-    {{-- Error Validasi --}}
-    @if($errors->any())
+<body class="bg-gray-50 min-h-screen">
 
-        <div class="bg-red-50 border border-red-200 text-red-700
-                    px-5 py-4 rounded-xl mb-6">
 
-            <p class="font-semibold mb-2">
-                Data belum dapat disimpan.
-            </p>
+    {{-- HEADER --}}
+    <header class="bg-white border-b border-gray-200">
 
-            <ul class="list-disc ml-5 text-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4">
 
-                @foreach($errors->all() as $error)
+            <div class="flex items-center justify-between">
 
-                    <li>{{ $error }}</li>
 
-                @endforeach
+                {{-- LOGO --}}
+                <div class="flex items-center gap-3">
 
-            </ul>
+                    <div
+                        class="w-11 h-11 bg-indigo-600
+                               rounded-xl flex items-center
+                               justify-center text-white text-xl"
+                    >
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <h1 class="text-xl font-bold text-gray-900">
+                            KAIH App
+                        </h1>
+
+                        <p class="text-sm text-gray-500">
+                            Sistem Informasi Akademik
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {{-- USER --}}
+                <div class="flex items-center gap-3">
+
+                    <div
+                        class="w-10 h-10 bg-indigo-100
+                               rounded-full flex items-center
+                               justify-center text-indigo-600
+                               font-bold"
+                    >
+                        {{ strtoupper(substr($user->name ?? 'O', 0, 1)) }}
+                    </div>
+
+
+                    <div class="hidden sm:block">
+
+                        <p class="font-semibold text-gray-800">
+                            {{ $user->name ?? 'Orang Tua' }}
+                        </p>
+
+                        <p class="text-sm text-gray-500">
+                            Orang Tua
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
-    @endif
+    </header>
 
 
-    {{-- Form --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
 
-        <form
-            action="{{ route('orangtua.store') }}"
-            method="POST"
-        >
+    {{-- NAVIGATION --}}
+    <nav class="bg-white border-b border-gray-100">
 
-            @csrf
+        <div class="max-w-7xl mx-auto px-6">
 
+            <div class="flex items-center gap-6 py-3">
 
-            {{-- Siswa --}}
-            <div class="mb-6">
-
-                <label
-                    for="siswa_id"
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Siswa
-                </label>
-
-                <select
-                    id="siswa_id"
-                    name="siswa_id"
-                    required
-
-                    class="w-full px-4 py-3
-                           border border-gray-300
-                           rounded-xl
-                           bg-white
-                           focus:outline-none
-                           focus:ring-2
-                           focus:ring-indigo-500
-                           focus:border-indigo-500"
-                >
-
-                    <option value="">
-                        -- Pilih Siswa --
-                    </option>
-
-                    @foreach($siswas as $siswa)
-
-                        <option
-                            value="{{ $siswa->id }}"
-                            {{ old('siswa_id') == $siswa->id ? 'selected' : '' }}
-                        >
-
-                            {{ $siswa->nis }}
-                            -
-                            {{ $siswa->nama_siswa }}
-                            -
-                            {{ $siswa->kelas?->nama_kelas ?? 'Tanpa Kelas' }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-            </div>
-
-
-            {{-- Nama Orang Tua --}}
-            <div class="mb-6">
-
-                <label
-                    for="nama_orang_tua"
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Nama Orang Tua / Wali
-                </label>
-
-                <input
-                    type="text"
-                    id="nama_orang_tua"
-                    name="nama_orang_tua"
-
-                    value="{{ old('nama_orang_tua') }}"
-
-                    required
-                    placeholder="Masukkan nama orang tua / wali"
-
-                    class="w-full px-4 py-3
-                           border border-gray-300
-                           rounded-xl
-                           focus:outline-none
-                           focus:ring-2
-                           focus:ring-indigo-500
-                           focus:border-indigo-500"
-                >
-
-            </div>
-
-
-            {{-- Hubungan --}}
-            <div class="mb-6">
-
-                <label
-                    for="hubungan"
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Hubungan
-                </label>
-
-                <select
-                    id="hubungan"
-                    name="hubungan"
-                    required
-
-                    class="w-full px-4 py-3
-                           border border-gray-300
-                           rounded-xl
-                           bg-white
-                           focus:outline-none
-                           focus:ring-2
-                           focus:ring-indigo-500
-                           focus:border-indigo-500"
-                >
-
-                    <option value="">
-                        -- Pilih Hubungan --
-                    </option>
-
-                    <option
-                        value="Ayah"
-                        {{ old('hubungan') == 'Ayah' ? 'selected' : '' }}
-                    >
-                        Ayah
-                    </option>
-
-                    <option
-                        value="Ibu"
-                        {{ old('hubungan') == 'Ibu' ? 'selected' : '' }}
-                    >
-                        Ibu
-                    </option>
-
-                    <option
-                        value="Wali"
-                        {{ old('hubungan') == 'Wali' ? 'selected' : '' }}
-                    >
-                        Wali
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            {{-- No HP --}}
-            <div class="mb-6">
-
-                <label
-                    for="no_hp"
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    No. HP
-                </label>
-
-                <input
-                    type="text"
-                    id="no_hp"
-                    name="no_hp"
-
-                    value="{{ old('no_hp') }}"
-
-                    placeholder="Contoh: 081234567890"
-
-                    class="w-full px-4 py-3
-                           border border-gray-300
-                           rounded-xl
-                           focus:outline-none
-                           focus:ring-2
-                           focus:ring-indigo-500
-                           focus:border-indigo-500"
-                >
-
-            </div>
-
-
-            {{-- Pekerjaan --}}
-            <div class="mb-8">
-
-                <label
-                    for="pekerjaan"
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Pekerjaan
-                </label>
-
-                <input
-                    type="text"
-                    id="pekerjaan"
-                    name="pekerjaan"
-
-                    value="{{ old('pekerjaan') }}"
-
-                    placeholder="Contoh: Wiraswasta"
-
-                    class="w-full px-4 py-3
-                           border border-gray-300
-                           rounded-xl
-                           focus:outline-none
-                           focus:ring-2
-                           focus:ring-indigo-500
-                           focus:border-indigo-500"
-                >
-
-            </div>
-
-
-            {{-- Tombol --}}
-            <div class="flex justify-end gap-3">
 
                 <a
-                    href="{{ route('orangtua.index') }}"
+                    href="{{ route('orangtua.dashboard') }}"
+                    class="text-indigo-600 font-semibold"
+                >
+                    🏠 Dashboard
+                </a>
 
-                    class="px-5 py-3
+
+                <a
+                    href="{{ route('orangtua.angket.index') }}"
+                    class="text-gray-600 hover:text-indigo-600
+                           font-medium transition"
+                >
+                    📝 Angket Harian
+                </a>
+
+
+                <form
+                    action="{{ route('logout') }}"
+                    method="POST"
+                    class="ml-auto"
+                >
+
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="text-red-500 hover:text-red-600
+                               font-medium"
+                    >
+                        Keluar
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    {{-- CONTENT --}}
+    <main class="max-w-7xl mx-auto px-6 py-8">
+
+
+        {{-- PESAN SUCCESS --}}
+        @if(session('success'))
+
+            <div
+                class="mb-6 bg-green-50
+                       border border-green-200
+                       text-green-700
+                       px-5 py-4 rounded-xl"
+            >
+                {{ session('success') }}
+            </div>
+
+        @endif
+
+
+        {{-- PESAN ERROR --}}
+        @if(session('error'))
+
+            <div
+                class="mb-6 bg-red-50
+                       border border-red-200
+                       text-red-700
+                       px-5 py-4 rounded-xl"
+            >
+                {{ session('error') }}
+            </div>
+
+        @endif
+
+
+
+        {{-- HEADER --}}
+        <div class="mb-8">
+
+            <p class="text-sm font-semibold text-indigo-600 mb-1">
+                DASHBOARD ORANG TUA
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900">
+                Selamat Datang 👋
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+                Pantau kegiatan dan kebiasaan harian anak.
+            </p>
+
+        </div>
+
+
+
+        {{-- DATA ANAK --}}
+        <div
+            class="bg-white rounded-2xl
+                   border border-gray-100
+                   shadow-sm p-6 mb-6"
+        >
+
+            <div class="flex items-center gap-4">
+
+                <div
+                    class="w-14 h-14 bg-indigo-100
+                           rounded-2xl flex items-center
+                           justify-center text-2xl"
+                >
+                    👨‍🎓
+                </div>
+
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Anak Anda
+                    </p>
+
+
+                    <h3 class="text-xl font-bold text-gray-900">
+
+                        {{ $orangTua->siswa->nama_siswa ?? 'Belum ada siswa' }}
+
+                    </h3>
+
+
+                    @if($orangTua->siswa)
+
+                        <p class="text-sm text-gray-500 mt-1">
+
+                            NIS:
+                            {{ $orangTua->siswa->nis }}
+
+                            @if($orangTua->siswa->kelas)
+
+                                — Kelas
+                                {{ $orangTua->siswa->kelas->nama_kelas }}
+
+                            @endif
+
+                        </p>
+
+                    @endif
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        {{-- MENU --}}
+        <div class="grid md:grid-cols-2 gap-6">
+
+
+            {{-- ANGKET --}}
+            <div
+                class="bg-white rounded-2xl
+                       border border-gray-100
+                       shadow-sm p-6"
+            >
+
+                <div
+                    class="w-12 h-12 bg-indigo-100
+                           rounded-xl flex items-center
+                           justify-center text-xl mb-4"
+                >
+                    📝
+                </div>
+
+
+                <h3 class="text-xl font-bold text-gray-900">
+                    Angket Harian
+                </h3>
+
+
+                <p class="text-gray-500 mt-2 mb-5">
+
+                    Isi kebiasaan harian anak seperti
+                    sholat, belajar, membantu orang tua,
+                    bangun pagi, dan tidur malam.
+
+                </p>
+
+
+                <a
+                    href="{{ route('orangtua.angket.create') }}"
+                    class="inline-flex items-center
+                           justify-center
+                           bg-indigo-600
+                           hover:bg-indigo-700
+                           text-white font-semibold
+                           px-5 py-3 rounded-xl
+                           transition"
+                >
+                    Isi Angket Hari Ini
+                </a>
+
+            </div>
+
+
+
+            {{-- RIWAYAT --}}
+            <div
+                class="bg-white rounded-2xl
+                       border border-gray-100
+                       shadow-sm p-6"
+            >
+
+                <div
+                    class="w-12 h-12 bg-green-100
+                           rounded-xl flex items-center
+                           justify-center text-xl mb-4"
+                >
+                    📊
+                </div>
+
+
+                <h3 class="text-xl font-bold text-gray-900">
+                    Riwayat Angket
+                </h3>
+
+
+                <p class="text-gray-500 mt-2 mb-5">
+
+                    Lihat data angket harian yang sudah
+                    diisi sebelumnya.
+
+                </p>
+
+
+                <a
+                    href="{{ route('orangtua.angket.index') }}"
+                    class="inline-flex items-center
+                           justify-center
                            bg-gray-100
                            hover:bg-gray-200
                            text-gray-700
                            font-semibold
-                           rounded-xl
+                           px-5 py-3 rounded-xl
                            transition"
                 >
-                    Batal
+                    Lihat Riwayat
                 </a>
-
-
-                <button
-                    type="submit"
-
-                    class="px-6 py-3
-                           bg-indigo-600
-                           hover:bg-indigo-700
-                           text-white
-                           font-semibold
-                           rounded-xl
-                           shadow-sm
-                           transition"
-                >
-                    Simpan Data
-                </button>
 
             </div>
 
-        </form>
+        </div>
 
-    </div>
+    </main>
 
-</div>
+</body>
 
-@endsection
+</html>

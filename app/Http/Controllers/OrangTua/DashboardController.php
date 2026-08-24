@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     /**
-     * Dashboard khusus orang tua.
+     * Dashboard Orang Tua
      */
     public function index()
     {
         $user = Auth::user();
 
-        // Pastikan yang mengakses adalah orang tua
+        // Pastikan akun adalah orang tua
         if (!$user || $user->role !== 'orang_tua') {
             abort(403, 'Akses hanya untuk orang tua.');
         }
@@ -25,30 +25,18 @@ class DashboardController extends Controller
             ->first();
 
         if (!$orangTua) {
-            abort(
-                403,
-                'Akun orang tua belum terhubung dengan data orang tua.'
-            );
+            return redirect()
+                ->route('dashboard')
+                ->with(
+                    'error',
+                    'Akun orang tua belum terhubung dengan data orang tua.'
+                );
         }
 
-        $siswa = $orangTua->siswa;
-
-        if (!$siswa) {
-            abort(
-                403,
-                'Data siswa belum terhubung dengan orang tua.'
-            );
-        }
-
-        // PENTING:
-        // Jangan lagi menggunakan:
-        // admin.orangtua.dashboard
-        //
-        // Gunakan view khusus orang tua.
+        // Tampilkan dashboard orang tua
         return view('orangtua.dashboard', compact(
             'user',
-            'orangTua',
-            'siswa'
+            'orangTua'
         ));
     }
 }

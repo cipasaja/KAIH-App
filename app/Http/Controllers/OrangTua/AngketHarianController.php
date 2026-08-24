@@ -38,25 +38,23 @@ class AngketHarianController extends Controller
                 );
         }
 
+        // Ambil riwayat angket anak
         $angket = AngketHarian::where('orang_tua_id', $orangTua->id)
             ->where('siswa_id', $siswa->id)
             ->orderByDesc('tanggal')
             ->get();
 
-        return view(
-            'orangtua.angket.index',
-            compact(
-                'user',
-                'orangTua',
-                'siswa',
-                'angket'
-            )
-        );
+        return view('orangtua.angket.index', compact(
+            'user',
+            'orangTua',
+            'siswa',
+            'angket'
+        ));
     }
 
 
     /**
-     * Menampilkan form angket.
+     * Menampilkan form angket harian.
      */
     public function create()
     {
@@ -84,17 +82,16 @@ class AngketHarianController extends Controller
                 );
         }
 
-        return view('orangtua.angket.create',compact(
-                'user',
-                'orangTua',
-                'siswa'
-            )
-        );
+        return view('orangtua.angket.create', compact(
+            'user',
+            'orangTua',
+            'siswa'
+        ));
     }
 
 
     /**
-     * Menyimpan angket.
+     * Menyimpan angket harian.
      */
     public function store(Request $request)
     {
@@ -125,7 +122,7 @@ class AngketHarianController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDASI DATA
+        | VALIDASI
         |--------------------------------------------------------------------------
         */
 
@@ -140,8 +137,6 @@ class AngketHarianController extends Controller
                 'nullable',
                 'date_format:H:i',
             ],
-
-            // SHOLAT 5 WAKTU
 
             'sholat_subuh' => [
                 'nullable',
@@ -168,21 +163,15 @@ class AngketHarianController extends Controller
                 'boolean',
             ],
 
-            // KEGIATAN
-
             'kegiatan_membantu' => [
                 'nullable',
                 'string',
             ],
 
-            // BELAJAR
-
             'belajar' => [
                 'nullable',
                 'boolean',
             ],
-
-            // TIDUR
 
             'tidur_malam' => [
                 'nullable',
@@ -193,18 +182,13 @@ class AngketHarianController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CEGAH PENGISIAN 2X PADA TANGGAL YANG SAMA
+        | CEGAH PENGISIAN DUA KALI
         |--------------------------------------------------------------------------
         */
 
-        $sudahAda = AngketHarian::where(
-                'siswa_id',
-                $siswa->id
-            )
-            ->where(
-                'tanggal',
-                $validated['tanggal']
-            )
+        $sudahAda = AngketHarian::where('orang_tua_id', $orangTua->id)
+            ->where('siswa_id', $siswa->id)
+            ->where('tanggal', $validated['tanggal'])
             ->exists();
 
         if ($sudahAda) {
@@ -231,11 +215,9 @@ class AngketHarianController extends Controller
 
             'tanggal' => $validated['tanggal'],
 
-            // Jam bangun
             'bangun_pagi' =>
                 $validated['bangun_pagi'] ?? null,
 
-            // Sholat 5 waktu
             'sholat_subuh' =>
                 $validated['sholat_subuh'] ?? null,
 
@@ -251,15 +233,12 @@ class AngketHarianController extends Controller
             'sholat_isya' =>
                 $validated['sholat_isya'] ?? null,
 
-            // Kegiatan membantu orang tua
             'kegiatan_membantu' =>
                 $validated['kegiatan_membantu'] ?? null,
 
-            // Belajar
             'belajar' =>
                 $validated['belajar'] ?? null,
 
-            // Jam tidur
             'tidur_malam' =>
                 $validated['tidur_malam'] ?? null,
         ]);
@@ -267,8 +246,12 @@ class AngketHarianController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | SELESAI
+        | SETELAH SIMPAN
         |--------------------------------------------------------------------------
+        |
+        | Jangan diarahkan ke dashboard admin.
+        | Kembali ke riwayat angket orang tua.
+        |
         */
 
         return redirect()
