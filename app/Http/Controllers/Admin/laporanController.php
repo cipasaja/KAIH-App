@@ -3,33 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AngketHarian;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\AngketHarian;
+use App\Models\Siswa;
+
 
 class LaporanController extends Controller
 {
-    /**
-     * Menampilkan laporan angket harian.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | HALAMAN LAPORAN
+    |--------------------------------------------------------------------------
+    */
+
     public function index(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | QUERY DASAR
-        |--------------------------------------------------------------------------
-        */
 
-        $query = AngketHarian::with([
-            'siswa',
-            'orangTua'
-        ]);
+        // =====================================================
+        // QUERY ANGKET
+        // =====================================================
+
+        $query = AngketHarian::with('siswa')
+            ->orderBy('tanggal', 'desc');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER TANGGAL
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // FILTER TANGGAL MULAI
+        // =====================================================
 
         if ($request->filled('tanggal_mulai')) {
 
@@ -40,6 +42,11 @@ class LaporanController extends Controller
             );
 
         }
+
+
+        // =====================================================
+        // FILTER TANGGAL SELESAI
+        // =====================================================
 
         if ($request->filled('tanggal_selesai')) {
 
@@ -52,11 +59,9 @@ class LaporanController extends Controller
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER SISWA
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // FILTER SISWA
+        // =====================================================
 
         if ($request->filled('siswa_id')) {
 
@@ -68,41 +73,42 @@ class LaporanController extends Controller
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | DATA LAPORAN
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // AMBIL DATA
+        // =====================================================
 
-        $angket = $query
-            ->orderByDesc('tanggal')
-            ->get();
+        $angket = $query->get();
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | DATA SISWA UNTUK FILTER
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // DATA SISWA
+        // =====================================================
 
-        $siswa = \App\Models\Siswa::orderBy(
-            'nama_siswa'
-        )->get();
+        $siswa = Siswa::orderBy('nama_siswa')->get();
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | STATISTIK
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // TOTAL ANGKET
+        // =====================================================
 
         $totalAngket = $angket->count();
 
+
+        // =====================================================
+        // TOTAL BELAJAR
+        // =====================================================
+
         $totalBelajar = $angket
-            ->where('belajar', 1)
+            ->where('belajar', true)
             ->count();
 
+
+        // =====================================================
+        // TOTAL SHOLAT
+        // =====================================================
+
         $totalSholat = 0;
+
 
         foreach ($angket as $item) {
 
@@ -125,14 +131,13 @@ class LaporanController extends Controller
             if ($item->sholat_isya) {
                 $totalSholat++;
             }
+
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | RETURN VIEW
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // TAMPILKAN VIEW
+        // =====================================================
 
         return view(
             'admin.laporan.index',
@@ -144,5 +149,165 @@ class LaporanController extends Controller
                 'totalSholat'
             )
         );
+
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DOWNLOAD PDF
+    |--------------------------------------------------------------------------
+    */
+
+    public function pdf(Request $request)
+    {
+
+        // =====================================================
+        // QUERY ANGKET
+        // =====================================================
+
+        $query = AngketHarian::with('siswa')
+            ->orderBy('tanggal', 'desc');
+
+
+        // =====================================================
+        // FILTER TANGGAL MULAI
+        // =====================================================
+
+        if ($request->filled('tanggal_mulai')) {
+
+            $query->whereDate(
+                'tanggal',
+                '>=',
+                $request->tanggal_mulai
+            );
+
+        }
+
+
+        // =====================================================
+        // FILTER TANGGAL SELESAI
+        // =====================================================
+
+        if ($request->filled('tanggal_selesai')) {
+
+            $query->whereDate(
+                'tanggal',
+                '<=',
+                $request->tanggal_selesai
+            );
+
+        }
+
+
+        // =====================================================
+        // FILTER SISWA
+        // =====================================================
+
+        if ($request->filled('siswa_id')) {
+
+            $query->where(
+                'siswa_id',
+                $request->siswa_id
+            );
+
+        }
+
+
+        // =====================================================
+        // AMBIL DATA
+        // =====================================================
+
+        $angket = $query->get();
+
+
+        // =====================================================
+        // STATISTIK
+        // =====================================================
+
+        $totalAngket = $angket->count();
+
+
+        $totalBelajar = $angket
+            ->where('belajar', true)
+            ->count();
+
+
+        $totalSholat = 0;
+
+
+        foreach ($angket as $item) {
+
+            if ($item->sholat_subuh) {
+                $totalSholat++;
+            }
+
+            if ($item->sholat_dzuhur) {
+                $totalSholat++;
+            }
+
+            if ($item->sholat_ashar) {
+                $totalSholat++;
+            }
+
+            if ($item->sholat_magrib) {
+                $totalSholat++;
+            }
+
+            if ($item->sholat_isya) {
+                $totalSholat++;
+            }
+
+        }
+
+
+        // =====================================================
+        // FILTER UNTUK PDF
+        // =====================================================
+
+        $tanggalMulai = $request->tanggal_mulai;
+
+        $tanggalSelesai = $request->tanggal_selesai;
+
+        $siswaId = $request->siswa_id;
+
+
+        // =====================================================
+        // BUAT PDF
+        // =====================================================
+
+        $pdf = Pdf::loadView(
+            'admin.laporan.pdf',
+            compact(
+                'angket',
+                'totalAngket',
+                'totalBelajar',
+                'totalSholat',
+                'tanggalMulai',
+                'tanggalSelesai',
+                'siswaId'
+            )
+        );
+
+
+        // =====================================================
+        // SET KERTAS A4 LANDSCAPE
+        // =====================================================
+
+        $pdf->setPaper(
+            'a4',
+            'landscape'
+        );
+
+
+        // =====================================================
+        // DOWNLOAD FILE
+        // =====================================================
+
+        return $pdf->download(
+            'laporan-angket-harian.pdf'
+        );
+
+    }
+
 }

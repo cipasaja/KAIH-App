@@ -28,7 +28,10 @@
                    flex flex-col"
         >
 
-            {{-- LOGO --}}
+            {{-- =================================================
+                LOGO
+            ================================================== --}}
+
             <div class="px-6 py-6 border-b border-slate-100">
 
                 <div class="flex items-center gap-3">
@@ -45,6 +48,7 @@
                     </div>
 
                     <div>
+
                         <h1 class="text-xl font-bold text-slate-900">
                             KAIH App
                         </h1>
@@ -52,6 +56,7 @@
                         <p class="text-xs text-slate-400 mt-0.5">
                             Sistem Akademik
                         </p>
+
                     </div>
 
                 </div>
@@ -59,7 +64,10 @@
             </div>
 
 
-            {{-- USER INFO --}}
+            {{-- =================================================
+                USER INFO
+            ================================================== --}}
+
             <div class="px-5 pt-5">
 
                 <div
@@ -101,7 +109,10 @@
             </div>
 
 
-            {{-- MENU --}}
+            {{-- =================================================
+                MENU
+            ================================================== --}}
+
             <nav class="flex-1 px-4 py-6 overflow-y-auto">
 
                 <p
@@ -116,7 +127,10 @@
                 </p>
 
 
-                {{-- Dashboard --}}
+                {{-- =================================================
+                    DASHBOARD
+                ================================================== --}}
+
                 <a
                     href="{{ route('admin.dashboard') }}"
                     class="flex items-center gap-3
@@ -130,14 +144,21 @@
                                 : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
                 >
 
-                    <span class="text-lg">🏠</span>
+                    <span class="text-lg">
+                        🏠
+                    </span>
 
-                    <span>Dashboard</span>
+                    <span>
+                        Dashboard
+                    </span>
 
                 </a>
 
 
-                {{-- Jurusan --}}
+                {{-- =================================================
+                    JURUSAN
+                ================================================== --}}
+
                 <a
                     href="{{ route('jurusan.index') }}"
                     class="flex items-center gap-3
@@ -151,14 +172,21 @@
                                 : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
                 >
 
-                    <span class="text-lg">🏫</span>
+                    <span class="text-lg">
+                        🏫
+                    </span>
 
-                    <span>Jurusan</span>
+                    <span>
+                        Jurusan
+                    </span>
 
                 </a>
 
 
-                {{-- Kelas --}}
+                {{-- =================================================
+                    KELAS
+                ================================================== --}}
+
                 <a
                     href="{{ route('kelas.index') }}"
                     class="flex items-center gap-3
@@ -172,14 +200,21 @@
                                 : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
                 >
 
-                    <span class="text-lg">📚</span>
+                    <span class="text-lg">
+                        📚
+                    </span>
 
-                    <span>Kelas</span>
+                    <span>
+                        Kelas
+                    </span>
 
                 </a>
 
 
-                {{-- Siswa --}}
+                {{-- =================================================
+                    SISWA
+                ================================================== --}}
+
                 <a
                     href="{{ route('siswa.index') }}"
                     class="flex items-center gap-3
@@ -193,14 +228,21 @@
                                 : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
                 >
 
-                    <span class="text-lg">👨‍🎓</span>
+                    <span class="text-lg">
+                        👨‍🎓
+                    </span>
 
-                    <span>Siswa</span>
+                    <span>
+                        Siswa
+                    </span>
 
                 </a>
 
 
-                {{-- Orang Tua --}}
+                {{-- =================================================
+                    ORANG TUA
+                ================================================== --}}
+
                 <a
                     href="{{ route('orangtua.index') }}"
                     class="flex items-center gap-3
@@ -214,40 +256,40 @@
                                 : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
                 >
 
-                    <span class="text-lg">👨‍👩‍👧</span>
+                    <span class="text-lg">
+                        👨‍👩‍👧
+                    </span>
 
-                    <span>Orang Tua</span>
+                    <span>
+                        Orang Tua
+                    </span>
 
                 </a>
 
 
-                {{-- Laporan --}}
+                {{-- =================================================
+                    LAPORAN
+                ================================================== --}}
+
                 <a
-                    href="#"
+                    href="{{ route('laporan.index') }}"
                     class="flex items-center gap-3
                            px-4 py-3
                            mb-1
                            rounded-xl
                            text-sm font-semibold
-                           text-slate-600
-                           hover:bg-indigo-50
-                           hover:text-indigo-700
-                           transition"
+                           transition
+                           {{ request()->routeIs('laporan.*')
+                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
+                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
                 >
 
-                    <span class="text-lg">📊</span>
+                    <span class="text-lg">
+                        📊
+                    </span>
 
-                    <span>Laporan</span>
-
-                    <span
-                        class="ml-auto
-                               text-[10px]
-                               bg-slate-100
-                               text-slate-400
-                               px-2 py-1
-                               rounded-full"
-                    >
-                        Soon
+                    <span>
+                        Laporan
                     </span>
 
                 </a>
@@ -255,7 +297,10 @@
             </nav>
 
 
-            {{-- LOGOUT --}}
+            {{-- =================================================
+                LOGOUT
+            ================================================== --}}
+
             <div class="p-4 border-t border-slate-100">
 
                 <form
@@ -278,9 +323,13 @@
                                transition"
                     >
 
-                        <span>🚪</span>
+                        <span>
+                            🚪
+                        </span>
 
-                        <span>Keluar dari Akun</span>
+                        <span>
+                            Keluar dari Akun
+                        </span>
 
                     </button>
 
@@ -298,7 +347,10 @@
         <div class="ml-72 min-h-screen">
 
 
-            {{-- HEADER --}}
+            {{-- =================================================
+                HEADER
+            ================================================== --}}
+
             <header
                 class="sticky top-0 z-30
                        h-20
@@ -313,23 +365,41 @@
                            flex items-center justify-between"
                 >
 
+                    {{-- PAGE TITLE --}}
+
                     <div>
 
-                        <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+                        <p
+                            class="text-xs
+                                   font-semibold
+                                   uppercase
+                                   tracking-wider
+                                   text-indigo-600"
+                        >
                             Admin Panel
                         </p>
 
                         <h2 class="text-xl font-bold text-slate-900">
-                            @yield('page-title', 'Dashboard')
+
+                            @yield(
+                                'page-title',
+                                'Dashboard'
+                            )
+
                         </h2>
 
                     </div>
 
 
-                    {{-- RIGHT HEADER --}}
+                    {{-- =================================================
+                        RIGHT HEADER
+                    ================================================== --}}
+
                     <div class="flex items-center gap-4">
 
+
                         {{-- Notification --}}
+
                         <button
                             type="button"
                             class="relative
@@ -344,17 +414,22 @@
                             🔔
 
                             <span
-                                class="absolute top-2 right-2
-                                       w-2 h-2
+                                class="absolute
+                                       top-2
+                                       right-2
+                                       w-2
+                                       h-2
                                        bg-red-500
                                        rounded-full
-                                       border-2 border-white"
+                                       border-2
+                                       border-white"
                             ></span>
 
                         </button>
 
 
                         {{-- User --}}
+
                         <div class="flex items-center gap-3">
 
                             <div
@@ -365,13 +440,24 @@
                                        flex items-center justify-center
                                        font-bold"
                             >
-                                {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+
+                                {{ strtoupper(
+                                    substr(
+                                        Auth::user()->name ?? 'A',
+                                        0,
+                                        1
+                                    )
+                                ) }}
+
                             </div>
+
 
                             <div class="hidden sm:block">
 
                                 <p class="text-sm font-semibold text-slate-800">
+
                                     {{ Auth::user()->name ?? 'Admin' }}
+
                                 </p>
 
                                 <p class="text-xs text-slate-400">
@@ -389,11 +475,17 @@
             </header>
 
 
-            {{-- MAIN CONTENT --}}
+            {{-- =====================================================
+                MAIN CONTENT
+            ====================================================== --}}
+
             <main class="p-6 lg:p-8">
 
 
-                {{-- SUCCESS --}}
+                {{-- =================================================
+                    SUCCESS MESSAGE
+                ================================================== --}}
+
                 @if(session('success'))
 
                     <div
@@ -432,7 +524,10 @@
                 @endif
 
 
-                {{-- ERROR --}}
+                {{-- =================================================
+                    ERROR MESSAGE
+                ================================================== --}}
+
                 @if(session('error'))
 
                     <div
@@ -471,7 +566,66 @@
                 @endif
 
 
+                {{-- =================================================
+                    VALIDATION ERRORS
+                ================================================== --}}
+
+                @if($errors->any())
+
+                    <div
+                        class="mb-6
+                               bg-red-50
+                               border border-red-200
+                               text-red-700
+                               px-5 py-4
+                               rounded-2xl"
+                    >
+
+                        <div class="flex items-start gap-3">
+
+                            <div
+                                class="w-9 h-9
+                                       flex-shrink-0
+                                       rounded-xl
+                                       bg-red-100
+                                       flex items-center justify-center"
+                            >
+                                !
+                            </div>
+
+                            <div>
+
+                                <p class="font-semibold mb-1">
+                                    Terdapat kesalahan
+                                </p>
+
+                                <ul class="text-sm space-y-1">
+
+                                    @foreach($errors->all() as $error)
+
+                                        <li>
+                                            • {{ $error }}
+                                        </li>
+
+                                    @endforeach
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+                {{-- =================================================
+                    PAGE CONTENT
+                ================================================== --}}
+
                 @yield('content')
+
 
             </main>
 
