@@ -13,31 +13,114 @@ use Maatwebsite\Excel\Facades\Excel;
 class SiswaController extends Controller
 {
     /**
-     * Menampilkan data siswa
+     * =========================================================
+     * MENAMPILKAN DATA SISWA
+     * =========================================================
      */
-    public function index()
+    public function index(Request $request)
     {
-        $siswas = Siswa::with('kelas')
-            ->orderBy('nama_siswa')
+        /*
+        |--------------------------------------------------------------------------
+        | QUERY DATA SISWA
+        |--------------------------------------------------------------------------
+        |
+        | with('kelas') digunakan supaya data kelas ikut diambil.
+        |
+        */
+
+        $query = Siswa::with('kelas');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FITUR PENCARIAN
+        |--------------------------------------------------------------------------
+        |
+        | Bisa mencari berdasarkan:
+        | - Nama siswa
+        | - NIS
+        |
+        */
+
+        if ($request->filled('search')) {
+
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where(
+                    'nama_siswa',
+                    'like',
+                    '%' . $search . '%'
+                );
+
+                $q->orWhere(
+                    'nis',
+                    'like',
+                    '%' . $search . '%'
+                );
+
+            });
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | URUTAN DATA
+        |--------------------------------------------------------------------------
+        |
+        | id ASC = data yang pertama kali ditambahkan
+        | akan berada di No 1.
+        |
+        | Contoh:
+        |
+        | Data pertama  -> No 1
+        | Data kedua    -> No 2
+        | Data ketiga   -> No 3
+        |
+        */
+
+        $siswas = $query
+            ->orderBy('id', 'asc')
             ->get();
 
-        return view('admin.siswa.index', compact('siswas'));
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAMPILKAN VIEW
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+            'admin.siswa.index',
+            compact('siswas')
+        );
     }
 
 
     /**
-     * Form tambah siswa
+     * =========================================================
+     * FORM TAMBAH SISWA
+     * =========================================================
      */
     public function create()
     {
-        $kelas = Kelas::orderBy('nama_kelas')->get();
+        $kelas = Kelas::orderBy(
+            'nama_kelas',
+            'asc'
+        )->get();
 
-        return view('admin.siswa.create', compact('kelas'));
+        return view(
+            'admin.siswa.create',
+            compact('kelas')
+        );
     }
 
 
     /**
-     * Menyimpan siswa baru
+     * =========================================================
+     * SIMPAN SISWA BARU
+     * =========================================================
      */
     public function store(Request $request)
     {
@@ -60,12 +143,17 @@ class SiswaController extends Controller
 
         return redirect()
             ->route('siswa.index')
-            ->with('success', 'Data siswa berhasil ditambahkan.');
+            ->with(
+                'success',
+                'Data siswa berhasil ditambahkan.'
+            );
     }
 
 
     /**
-     * Import Excel
+     * =========================================================
+     * IMPORT EXCEL
+     * =========================================================
      */
     public function import(Request $request)
     {
@@ -83,12 +171,17 @@ class SiswaController extends Controller
 
         return redirect()
             ->route('siswa.index')
-            ->with('success', 'Data siswa berhasil diimport.');
+            ->with(
+                'success',
+                'Data siswa berhasil diimport.'
+            );
     }
 
 
     /**
-     * Export Excel
+     * =========================================================
+     * EXPORT EXCEL
+     * =========================================================
      */
     public function export()
     {
@@ -100,23 +193,33 @@ class SiswaController extends Controller
 
 
     /**
-     * Form edit siswa
+     * =========================================================
+     * FORM EDIT SISWA
+     * =========================================================
      */
     public function edit($id)
     {
         $siswa = Siswa::findOrFail($id);
 
-        $kelas = Kelas::orderBy('nama_kelas')->get();
+        $kelas = Kelas::orderBy(
+            'nama_kelas',
+            'asc'
+        )->get();
 
         return view(
             'admin.siswa.edit',
-            compact('siswa', 'kelas')
+            compact(
+                'siswa',
+                'kelas'
+            )
         );
     }
 
 
     /**
-     * Update siswa
+     * =========================================================
+     * UPDATE SISWA
+     * =========================================================
      */
     public function update(Request $request, $id)
     {
@@ -141,12 +244,17 @@ class SiswaController extends Controller
 
         return redirect()
             ->route('siswa.index')
-            ->with('success', 'Data siswa berhasil diperbarui.');
+            ->with(
+                'success',
+                'Data siswa berhasil diperbarui.'
+            );
     }
 
 
     /**
-     * Hapus siswa
+     * =========================================================
+     * HAPUS SISWA
+     * =========================================================
      */
     public function destroy($id)
     {
@@ -156,6 +264,9 @@ class SiswaController extends Controller
 
         return redirect()
             ->route('siswa.index')
-            ->with('success', 'Data siswa berhasil dihapus.');
+            ->with(
+                'success',
+                'Data siswa berhasil dihapus.'
+            );
     }
 }

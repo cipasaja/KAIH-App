@@ -61,6 +61,72 @@
 
 
 {{-- =========================================================
+    PESAN SUKSES
+========================================================= --}}
+
+@if(session('success'))
+
+    <div
+        class="mb-6
+               bg-green-50
+               border border-green-200
+               text-green-700
+               px-5
+               py-4
+               rounded-xl"
+    >
+
+        <div class="flex items-center gap-3">
+
+            <span class="text-xl">
+                ✓
+            </span>
+
+            <span class="font-medium">
+                {{ session('success') }}
+            </span>
+
+        </div>
+
+    </div>
+
+@endif
+
+
+{{-- =========================================================
+    ERROR
+========================================================= --}}
+
+@if($errors->any())
+
+    <div
+        class="mb-6
+               bg-red-50
+               border border-red-200
+               text-red-700
+               px-5
+               py-4
+               rounded-xl"
+    >
+
+        <ul class="list-disc list-inside">
+
+            @foreach($errors->all() as $error)
+
+                <li>
+                    {{ $error }}
+                </li>
+
+            @endforeach
+
+        </ul>
+
+    </div>
+
+@endif
+
+
+{{-- =========================================================
     STATISTIK
 ========================================================= --}}
 
@@ -311,21 +377,193 @@
 >
 
 
-    {{-- Header --}}
-    <div class="px-7 py-6 border-b border-gray-100">
+    {{-- =====================================================
+        HEADER DAFTAR + PENCARIAN
+    ====================================================== --}}
 
-        <h3 class="text-xl font-bold text-gray-900">
-            Daftar Siswa
-        </h3>
+    <div
+        class="px-7 py-6
+               border-b border-gray-100"
+    >
 
-        <p class="text-gray-500 mt-1">
-            {{ $siswas->count() }} siswa terdaftar.
-        </p>
+        <div
+            class="flex
+                   flex-col
+                   lg:flex-row
+                   lg:items-center
+                   lg:justify-between
+                   gap-5"
+        >
+
+
+            {{-- Judul --}}
+            <div>
+
+                <h3 class="text-xl font-bold text-gray-900">
+                    Daftar Siswa
+                </h3>
+
+                <p class="text-gray-500 mt-1">
+
+                    @if(!empty($search))
+
+                        Hasil pencarian untuk:
+                        <span class="font-semibold text-gray-700">
+                            "{{ $search }}"
+                        </span>
+
+                    @else
+
+                        {{ $siswas->count() }} siswa terdaftar.
+
+                    @endif
+
+                </p>
+
+            </div>
+
+
+            {{-- =================================================
+                FORM PENCARIAN
+            ================================================== --}}
+
+            <form
+                action="{{ route('siswa.index') }}"
+                method="GET"
+                class="flex
+                       flex-col
+                       sm:flex-row
+                       gap-2
+                       w-full
+                       lg:w-auto"
+            >
+
+                <div class="relative">
+
+                    <span
+                        class="absolute
+                               left-4
+                               top-1/2
+                               -translate-y-1/2
+                               text-gray-400"
+                    >
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ $search ?? '' }}"
+                        placeholder="Cari NIS / nama / kelas..."
+
+                        class="w-full
+                               sm:w-80
+                               border
+                               border-gray-200
+                               rounded-xl
+                               pl-11
+                               pr-4
+                               py-3
+                               text-sm
+                               bg-gray-50
+                               focus:outline-none
+                               focus:ring-2
+                               focus:ring-indigo-500
+                               focus:border-indigo-500"
+                    >
+
+                </div>
+
+
+                {{-- Tombol Cari --}}
+                <button
+                    type="submit"
+
+                    class="inline-flex
+                           items-center
+                           justify-center
+                           gap-2
+                           bg-indigo-600
+                           hover:bg-indigo-700
+                           text-white
+                           font-semibold
+                           px-5
+                           py-3
+                           rounded-xl
+                           transition
+                           whitespace-nowrap"
+                >
+
+                    🔍
+
+                    Cari
+
+                </button>
+
+
+                {{-- Tombol Reset --}}
+                @if(!empty($search))
+
+                    <a
+                        href="{{ route('siswa.index') }}"
+
+                        class="inline-flex
+                               items-center
+                               justify-center
+                               bg-gray-100
+                               hover:bg-gray-200
+                               text-gray-700
+                               font-semibold
+                               px-5
+                               py-3
+                               rounded-xl
+                               transition
+                               whitespace-nowrap"
+                    >
+
+                        Reset
+
+                    </a>
+
+                @endif
+
+            </form>
+
+        </div>
 
     </div>
 
 
-    {{-- Table --}}
+    {{-- =====================================================
+        INFO HASIL PENCARIAN
+    ====================================================== --}}
+
+    @if(!empty($search))
+
+        <div
+            class="px-7 py-4
+                   bg-indigo-50
+                   border-b border-indigo-100"
+        >
+
+            <p class="text-sm text-indigo-700">
+
+                🔎 Menampilkan
+                <strong>{{ $siswas->count() }}</strong>
+                data siswa yang cocok dengan pencarian
+                <strong>"{{ $search }}"</strong>.
+
+            </p>
+
+        </div>
+
+    @endif
+
+
+    {{-- =====================================================
+        TABLE
+    ====================================================== --}}
+
     <div class="overflow-x-auto">
 
         <table class="w-full">
@@ -457,7 +695,11 @@
                         {{-- NIS --}}
                         <td class="px-7 py-5">
 
-                            <span class="text-base font-semibold text-gray-800">
+                            <span
+                                class="text-base
+                                       font-semibold
+                                       text-gray-800"
+                            >
                                 {{ $siswa->nis }}
                             </span>
 
@@ -715,41 +957,72 @@
                                            text-3xl
                                            mb-4"
                                 >
-                                    🎓
+                                    🔍
                                 </div>
 
 
-                                <h4 class="text-lg font-bold text-gray-800">
-                                    Belum ada data siswa
-                                </h4>
+                                @if(!empty($search))
 
+                                    <h4 class="text-lg font-bold text-gray-800">
+                                        Data siswa tidak ditemukan
+                                    </h4>
 
-                                <p class="text-gray-500 mt-1 mb-5">
-                                    Silakan tambahkan data siswa terlebih dahulu.
-                                </p>
+                                    <p class="text-gray-500 mt-1 mb-5">
+                                        Tidak ada siswa yang cocok dengan
+                                        "{{ $search }}".
+                                    </p>
 
+                                    <a
+                                        href="{{ route('siswa.index') }}"
 
-                                <a
-                                    href="{{ route('siswa.create') }}"
+                                        class="inline-flex
+                                               items-center
+                                               gap-2
+                                               bg-gray-100
+                                               hover:bg-gray-200
+                                               text-gray-700
+                                               font-semibold
+                                               px-5
+                                               py-3
+                                               rounded-xl
+                                               transition"
+                                    >
+                                        Reset Pencarian
+                                    </a>
 
-                                    class="inline-flex
-                                           items-center
-                                           gap-2
-                                           bg-indigo-600
-                                           hover:bg-indigo-700
-                                           text-white
-                                           font-semibold
-                                           px-5
-                                           py-3
-                                           rounded-xl
-                                           transition"
-                                >
+                                @else
 
-                                    +
+                                    <h4 class="text-lg font-bold text-gray-800">
+                                        Belum ada data siswa
+                                    </h4>
 
-                                    Tambah Siswa
+                                    <p class="text-gray-500 mt-1 mb-5">
+                                        Silakan tambahkan data siswa terlebih dahulu.
+                                    </p>
 
-                                </a>
+                                    <a
+                                        href="{{ route('siswa.create') }}"
+
+                                        class="inline-flex
+                                               items-center
+                                               gap-2
+                                               bg-indigo-600
+                                               hover:bg-indigo-700
+                                               text-white
+                                               font-semibold
+                                               px-5
+                                               py-3
+                                               rounded-xl
+                                               transition"
+                                    >
+
+                                        +
+
+                                        Tambah Siswa
+
+                                    </a>
+
+                                @endif
 
                             </div>
 
@@ -762,6 +1035,41 @@
             </tbody>
 
         </table>
+
+    </div>
+
+
+    {{-- =====================================================
+        FOOTER
+    ====================================================== --}}
+
+    <div
+        class="px-7 py-5
+               border-t border-gray-100
+               bg-gray-50"
+    >
+
+        <p class="text-sm text-gray-500">
+
+            @if(!empty($search))
+
+                Menampilkan
+                <strong class="text-gray-700">
+                    {{ $siswas->count() }}
+                </strong>
+                hasil pencarian.
+
+            @else
+
+                Total:
+                <strong class="text-gray-700">
+                    {{ $siswas->count() }}
+                </strong>
+                data siswa.
+
+            @endif
+
+        </p>
 
     </div>
 
