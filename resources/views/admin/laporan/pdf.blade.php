@@ -1,188 +1,214 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="utf-8">
 
-    <title>
-        Laporan Angket Harian Siswa
-    </title>
-
-
-    <style>
-
-        @page {
-            size: A4 landscape;
-            margin: 15px;
-        }
+<title>
+Laporan Monitoring Angket Siswa
+</title>
 
 
-        * {
-            box-sizing: border-box;
-        }
+<style>
+
+body{
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color:#333;
+
+}
 
 
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 8px;
-            color: #222;
-            margin: 0;
-            padding: 0;
-        }
+.header{
+
+    text-align:center;
+    margin-bottom:20px;
+
+}
 
 
-        /* =====================================================
-           HEADER
-        ====================================================== */
+.header h1{
 
-        .header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
+    font-size:18px;
+    margin:0;
+    font-weight:bold;
 
-
-        .header h1 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
+}
 
 
-        .header p {
-            margin: 4px 0 0;
-            font-size: 9px;
-            color: #555;
-        }
+.header h2{
+
+    font-size:15px;
+    margin:5px 0;
+
+}
 
 
-        /* =====================================================
-           FILTER
-        ====================================================== */
+.header p{
 
-        .filter {
-            margin-bottom: 12px;
-        }
+    margin:3px 0;
+    font-size:12px;
 
-
-        .filter table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+}
 
 
-        .filter td {
-            border: none;
-            padding: 2px;
-            font-size: 8px;
-        }
 
 
-        .filter-label {
-            width: 100px;
-            font-weight: bold;
-        }
+.info-table{
+
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:15px;
+
+}
 
 
-        /* =====================================================
-           TABLE
-        ====================================================== */
+.info-table td{
 
-        .report-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+    border:1px solid #ccc;
+    padding:8px;
+
+}
 
 
-        .report-table th {
-            background: #eeeeee;
-            border: 1px solid #777;
-            padding: 5px 3px;
-            text-align: center;
-            font-size: 7px;
-            font-weight: bold;
-        }
 
 
-        .report-table td {
-            border: 1px solid #999;
-            padding: 4px 3px;
-            font-size: 7px;
-            word-wrap: break-word;
-        }
 
 
-        .center {
-            text-align: center;
-        }
+.stat{
+
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:20px;
+
+}
 
 
-        /* =====================================================
-           LEBAR KOLOM
-        ====================================================== */
+.stat td{
 
-        .col-no {
-            width: 25px;
-        }
+    border:1px solid #ccc;
+    padding:10px;
+    text-align:center;
 
-
-        .col-tanggal {
-            width: 65px;
-        }
+}
 
 
-        .col-siswa {
-            width: 80px;
-        }
+.stat-title{
+
+    font-size:11px;
+    color:#666;
+
+}
 
 
-        .col-nis {
-            width: 50px;
-        }
+.stat-value{
+
+    font-size:16px;
+    font-weight:bold;
+
+}
 
 
-        .col-bangun {
-            width: 65px;
-        }
 
 
-        .col-sholat {
-            width: 50px;
-        }
 
 
-        .col-belajar {
-            width: 50px;
-        }
+
+table.data{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
 
 
-        .col-kegiatan {
-            width: 130px;
-        }
+
+table.data th{
+
+    background:#eeeeee;
+    font-weight:bold;
+    text-align:center;
+
+}
 
 
-        .col-tidur {
-            width: 60px;
-        }
+
+table.data th,
+table.data td{
+
+    border:1px solid #444;
+    padding:7px;
+
+}
 
 
-        /* =====================================================
-           FOOTER
-        ====================================================== */
 
-        .footer {
-            margin-top: 12px;
-            font-size: 8px;
-        }
+.center{
+
+    text-align:center;
+
+}
 
 
-        .footer p {
-            margin: 2px 0;
-        }
 
 
-    </style>
+
+
+
+.badge{
+
+    padding:4px 8px;
+    font-size:11px;
+
+}
+
+
+
+.baik{
+
+    background:#dcfce7;
+    color:#166534;
+
+}
+
+
+
+.perhatian{
+
+    background:#fef9c3;
+    color:#854d0e;
+
+}
+
+
+
+.pendampingan{
+
+    background:#fee2e2;
+    color:#991b1b;
+
+}
+
+
+
+
+
+
+
+.footer{
+
+    margin-top:40px;
+    text-align:right;
+    font-size:11px;
+
+}
+
+
+
+</style>
+
 
 </head>
 
@@ -190,325 +216,498 @@
 <body>
 
 
-    {{-- =====================================================
-         HEADER
-    ====================================================== --}}
 
-    <div class="header">
+<div class="header">
 
-        <h1>
-            LAPORAN ANGKET HARIAN SISWA
-        </h1>
 
-        <p>
-            KAIH App - Sistem Akademik
-        </p>
+<h1>
+G7KAIH
+</h1>
 
-    </div>
 
+<h2>
+LAPORAN MONITORING ANGKET SISWA
+</h2>
 
-    {{-- =====================================================
-         FILTER
-    ====================================================== --}}
 
-    <div class="filter">
+<p>
+Sistem Monitoring Aktivitas Harian Siswa
+</p>
 
-        <table>
 
-            <tr>
+</div>
 
-                <td class="filter-label">
-                    Tanggal Mulai
-                </td>
 
-                <td>
-                    :
-                    {{ $tanggalMulai ?: 'Semua tanggal' }}
-                </td>
 
-            </tr>
 
 
-            <tr>
 
-                <td class="filter-label">
-                    Tanggal Selesai
-                </td>
 
-                <td>
-                    :
-                    {{ $tanggalSelesai ?: 'Semua tanggal' }}
-                </td>
+<table class="info-table">
 
-            </tr>
 
+<tr>
 
-            <tr>
+<td width="25%">
+Periode
+</td>
 
-                <td class="filter-label">
-                    Siswa
-                </td>
 
-                <td>
-                    :
+<td>
 
-                    @if($siswaId)
+@php
+    $tanggalMulai = $tanggalMulai ?? null;
+    $tanggalAkhir = $tanggalAkhir ?? null;
+@endphp
 
-                        {{ optional(
-                            $angket->first()?->siswa
-                        )->nama_siswa ?? 'Siswa terpilih' }}
 
-                    @else
+@if($tanggalMulai && $tanggalAkhir)
 
-                        Semua siswa
+{{ $tanggalMulai }}
 
-                    @endif
+s/d
 
-                </td>
+{{ $tanggalAkhir }}
 
-            </tr>
 
-        </table>
+@elseif($tanggalMulai)
 
-    </div>
+Mulai {{ $tanggalMulai }}
 
 
-    {{-- =====================================================
-         TABEL
-    ====================================================== --}}
+@elseif($tanggalAkhir)
 
-    <table class="report-table">
+Sampai {{ $tanggalAkhir }}
 
-        <thead>
 
-            <tr>
+@else
 
-                <th class="col-no">
-                    No
-                </th>
+Semua Data
 
-                <th class="col-tanggal">
-                    Tanggal
-                </th>
 
-                <th class="col-siswa">
-                    Siswa
-                </th>
+@endif
 
-                <th class="col-nis">
-                    NIS
-                </th>
 
-                <th class="col-bangun">
-                    Bangun
-                </th>
+</td>
 
-                <th class="col-sholat">
-                    Subuh
-                </th>
 
-                <th class="col-sholat">
-                    Dzuhur
-                </th>
+</tr>
 
-                <th class="col-sholat">
-                    Ashar
-                </th>
 
-                <th class="col-sholat">
-                    Magrib
-                </th>
 
-                <th class="col-sholat">
-                    Isya
-                </th>
 
-                <th class="col-belajar">
-                    Belajar
-                </th>
 
-                <th class="col-kegiatan">
-                    Kegiatan Membantu
-                </th>
+<tr>
 
-                <th class="col-tidur">
-                    Tidur
-                </th>
+<td>
+Tanggal Cetak
+</td>
 
-            </tr>
 
-        </thead>
+<td>
 
+{{ date('d-m-Y') }}
 
-        <tbody>
+</td>
 
-            @forelse($angket as $item)
 
-                <tr>
+</tr>
 
-                    <td class="center">
-                        {{ $loop->iteration }}
-                    </td>
 
+</table>
 
-                    <td class="center">
 
-                        {{ \Carbon\Carbon::parse(
-                            $item->tanggal
-                        )->format('d/m/Y') }}
 
-                    </td>
 
 
-                    <td>
 
-                        {{ $item->siswa->nama_siswa ?? '-' }}
 
-                    </td>
 
 
-                    <td class="center">
+@php
 
-                        {{ $item->siswa->nis ?? '-' }}
 
-                    </td>
+$total = $angket->count();
 
 
-                    <td class="center">
+$rata = round(
+    $angket->avg('skor') ?? 0
+);
 
-                        {{ $item->bangun_pagi ?? '-' }}
 
-                    </td>
 
+$baik = $angket
+    ->where('kategori','Baik')
+    ->count();
 
-                    <td class="center">
 
-                        {{ $item->sholat_subuh ? 'Ya' : 'Tidak' }}
 
-                    </td>
+$perhatian = $angket
+    ->where('kategori','Perlu Perhatian')
+    ->count();
 
 
-                    <td class="center">
 
-                        {{ $item->sholat_dzuhur ? 'Ya' : 'Tidak' }}
+$pendampingan = $angket
+    ->where('kategori','Perlu Pendampingan')
+    ->count();
 
-                    </td>
 
 
-                    <td class="center">
+@endphp
 
-                        {{ $item->sholat_ashar ? 'Ya' : 'Tidak' }}
 
-                    </td>
 
 
-                    <td class="center">
 
-                        {{ $item->sholat_magrib ? 'Ya' : 'Tidak' }}
 
-                    </td>
 
+<table class="stat">
 
-                    <td class="center">
+<tr>
 
-                        {{ $item->sholat_isya ? 'Ya' : 'Tidak' }}
 
-                    </td>
 
+<td>
 
-                    <td class="center">
+<div class="stat-title">
+Total Angket
+</div>
 
-                        {{ $item->belajar ? 'Ya' : 'Tidak' }}
+<div class="stat-value">
+{{ $total }}
+</div>
 
-                    </td>
 
+</td>
 
-                    <td>
 
-                        {{ $item->kegiatan_membantu ?? '-' }}
 
-                    </td>
 
 
-                    <td class="center">
+<td>
 
-                        {{ $item->tidur_malam ?? '-' }}
+<div class="stat-title">
+Rata-rata Skor
+</div>
 
-                    </td>
+<div class="stat-value">
+{{ $rata }}
+</div>
 
-                </tr>
 
+</td>
 
-            @empty
 
-                <tr>
 
-                    <td
-                        colspan="13"
-                        class="center"
-                    >
 
-                        Tidak ada data angket.
 
-                    </td>
+<td>
 
-                </tr>
+<div class="stat-title">
+Kategori Baik
+</div>
 
-            @endforelse
+<div class="stat-value">
+{{ $baik }}
+</div>
 
-        </tbody>
 
-    </table>
+</td>
 
 
-    {{-- =====================================================
-         FOOTER
-    ====================================================== --}}
 
-    <div class="footer">
 
-        <p>
 
-            <strong>
-                Total Data:
-            </strong>
+<td>
 
-            {{ $totalAngket }} angket
+<div class="stat-title">
+Perhatian
+</div>
 
-        </p>
+<div class="stat-value">
+{{ $perhatian }}
+</div>
 
 
-        <p>
+</td>
 
-            <strong>
-                Total Anak Belajar:
-            </strong>
 
-            {{ $totalBelajar }} angket
 
-        </p>
 
 
-        <p>
+<td>
 
-            <strong>
-                Total Sholat:
-            </strong>
+<div class="stat-title">
+Pendampingan
+</div>
 
-            {{ $totalSholat }}
+<div class="stat-value">
+{{ $pendampingan }}
+</div>
 
-        </p>
 
+</td>
 
-        <p>
 
-            Dicetak pada:
 
-            {{ now()->format('d/m/Y H:i') }}
+</tr>
 
-        </p>
+</table>
 
-    </div>
+
+
+
+
+
+
+
+
+<table class="data">
+
+
+<thead>
+
+<tr>
+
+
+<th width="5%">
+No
+</th>
+
+
+<th>
+Siswa
+</th>
+
+
+<th>
+Kelas
+</th>
+
+
+<th>
+Orang Tua
+</th>
+
+
+<th>
+Tanggal
+</th>
+
+
+<th>
+Skor
+</th>
+
+
+<th>
+Kategori
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+
+
+
+
+<tbody>
+
+
+@foreach($angket as $item)
+
+
+<tr>
+
+
+<td class="center">
+
+{{ $loop->iteration }}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{{ optional($item->siswa)->nama_siswa ?? '-' }}
+
+<br>
+
+<small>
+
+NIS:
+{{ optional($item->siswa)->nis ?? '-' }}
+
+</small>
+
+
+</td>
+
+
+
+
+
+
+
+<td class="center">
+
+
+{{ optional(optional($item->siswa)->kelas)->nama_kelas ?? '-' }}
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{ optional($item->orangTua)->nama_orang_tua ?? '-' }}
+
+
+</td>
+
+
+
+
+
+
+
+<td class="center">
+
+
+{{
+
+\Carbon\Carbon::parse(
+$item->tanggal
+)->format('d-m-Y')
+
+}}
+
+
+</td>
+
+
+
+
+
+
+
+<td class="center">
+
+
+{{ $item->skor ?? 0 }}
+
+
+</td>
+
+
+
+
+
+
+
+<td class="center">
+
+
+
+@if($item->kategori == 'Baik')
+
+
+<span class="badge baik">
+
+Baik
+
+</span>
+
+
+
+@elseif($item->kategori == 'Perlu Perhatian')
+
+
+<span class="badge perhatian">
+
+Perhatian
+
+</span>
+
+
+
+@elseif($item->kategori == 'Perlu Pendampingan')
+
+
+<span class="badge pendampingan">
+
+Pendampingan
+
+</span>
+
+
+
+@else
+
+
+-
+
+
+@endif
+
+
+
+</td>
+
+
+
+
+</tr>
+
+
+@endforeach
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+
+
+
+
+
+
+
+<div class="footer">
+
+
+Dicetak oleh Admin G7KAIH
+
+<br>
+
+{{ date('d F Y') }}
+
+
+</div>
+
+
+
 
 
 </body>

@@ -25,6 +25,14 @@ class Kelas extends Model
     }
 
     /**
+     * Alias relasi untuk kebutuhan withCount('siswas').
+     */
+    public function siswas()
+    {
+        return $this->hasMany(Siswa::class, 'kelas_id');
+    }
+
+    /**
      * Relasi ke jurusan.
      */
     public function jurusan()

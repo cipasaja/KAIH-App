@@ -22,6 +22,10 @@ class AngketHarian extends Model
         'sholat_magrib',
         'sholat_isya',
         'belajar',
+        'sarapan',
+        'makan_siang',
+        'makan_malam',
+        'olahraga',
         'tidur_malam',
     ];
 
@@ -32,6 +36,10 @@ class AngketHarian extends Model
         'sholat_magrib' => 'boolean',
         'sholat_isya' => 'boolean',
         'belajar' => 'boolean',
+        'sarapan' => 'boolean',
+        'makan_siang' => 'boolean',
+        'makan_malam' => 'boolean',
+        'olahraga' => 'boolean',
     ];
 
     public function orangTua()

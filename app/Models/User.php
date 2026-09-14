@@ -18,6 +18,7 @@ class User extends Authenticatable
         'password',
         'role',
         'orang_tua_id',
+        'must_change_password',
     ];
 
     protected $hidden = [

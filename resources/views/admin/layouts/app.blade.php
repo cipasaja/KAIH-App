@@ -2,637 +2,944 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        @yield('title', 'Dashboard') - KAIH App
-    </title>
+<meta charset="UTF-8">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>
+@yield('title','G7KAIH Admin')
+</title>
+
+
+@vite([
+'resources/css/app.css',
+'resources/js/app.js'
+])
+
+
 </head>
 
-<body class="bg-slate-50 text-slate-800 antialiased">
 
-    <div class="min-h-screen">
 
-        {{-- =====================================================
-            SIDEBAR
-        ====================================================== --}}
 
-        <aside
-            class="fixed inset-y-0 left-0 z-40
-                   w-72
-                   bg-white
-                   border-r border-slate-200
-                   flex flex-col"
-        >
+<body class="bg-slate-100 text-slate-800">
 
-            {{-- =================================================
-                LOGO
-            ================================================== --}}
 
-            <div class="px-6 py-6 border-b border-slate-100">
 
-                <div class="flex items-center gap-3">
+<div class="flex min-h-screen">
 
-                    <div
-                        class="w-11 h-11
-                               rounded-2xl
-                               bg-indigo-600
-                               flex items-center justify-center
-                               text-xl
-                               shadow-lg shadow-indigo-200"
-                    >
-                        🎓
-                    </div>
 
-                    <div>
 
-                        <h1 class="text-xl font-bold text-slate-900">
-                            KAIH App
-                        </h1>
 
-                        <p class="text-xs text-slate-400 mt-0.5">
-                            Sistem Akademik
-                        </p>
 
-                    </div>
 
-                </div>
 
-            </div>
+{{-- SIDEBAR --}}
 
 
-            {{-- =================================================
-                USER INFO
-            ================================================== --}}
+<aside
 
-            <div class="px-5 pt-5">
-
-                <div
-                    class="bg-slate-50
-                           border border-slate-100
-                           rounded-2xl
-                           p-4"
-                >
+class="
+fixed
+left-0
+top-0
+w-72
+h-screen
+bg-[#0f172a]
+text-white
+flex
+flex-col
+shadow-2xl
+overflow-y-auto
+">
 
-                    <div class="flex items-center gap-3">
-
-                        <div
-                            class="w-10 h-10
-                                   rounded-xl
-                                   bg-indigo-100
-                                   text-indigo-700
-                                   flex items-center justify-center
-                                   font-bold"
-                        >
-                            {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
-                        </div>
 
-                        <div class="min-w-0">
 
-                            <p class="font-semibold text-sm text-slate-800 truncate">
-                                {{ Auth::user()->name ?? 'Admin' }}
-                            </p>
-
-                            <p class="text-xs text-slate-400">
-                                Administrator
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {{-- =================================================
-                MENU
-            ================================================== --}}
 
-            <nav class="flex-1 px-4 py-6 overflow-y-auto">
-
-                <p
-                    class="px-3 mb-3
-                           text-[11px]
-                           font-bold
-                           uppercase
-                           tracking-wider
-                           text-slate-400"
-                >
-                    Menu Utama
-                </p>
-
-
-                {{-- =================================================
-                    DASHBOARD
-                ================================================== --}}
-
-                <a
-                    href="{{ route('admin.dashboard') }}"
-                    class="flex items-center gap-3
-                           px-4 py-3
-                           mb-1
-                           rounded-xl
-                           text-sm font-semibold
-                           transition
-                           {{ request()->routeIs('admin.dashboard')
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
-                >
-
-                    <span class="text-lg">
-                        🏠
-                    </span>
-
-                    <span>
-                        Dashboard
-                    </span>
-
-                </a>
-
-
-                {{-- =================================================
-                    JURUSAN
-                ================================================== --}}
-
-                <a
-                    href="{{ route('jurusan.index') }}"
-                    class="flex items-center gap-3
-                           px-4 py-3
-                           mb-1
-                           rounded-xl
-                           text-sm font-semibold
-                           transition
-                           {{ request()->routeIs('jurusan.*')
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
-                >
-
-                    <span class="text-lg">
-                        🏫
-                    </span>
-
-                    <span>
-                        Jurusan
-                    </span>
-
-                </a>
-
-
-                {{-- =================================================
-                    KELAS
-                ================================================== --}}
-
-                <a
-                    href="{{ route('kelas.index') }}"
-                    class="flex items-center gap-3
-                           px-4 py-3
-                           mb-1
-                           rounded-xl
-                           text-sm font-semibold
-                           transition
-                           {{ request()->routeIs('kelas.*')
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
-                >
-
-                    <span class="text-lg">
-                        📚
-                    </span>
-
-                    <span>
-                        Kelas
-                    </span>
-
-                </a>
-
-
-                {{-- =================================================
-                    SISWA
-                ================================================== --}}
-
-                <a
-                    href="{{ route('siswa.index') }}"
-                    class="flex items-center gap-3
-                           px-4 py-3
-                           mb-1
-                           rounded-xl
-                           text-sm font-semibold
-                           transition
-                           {{ request()->routeIs('siswa.*')
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
-                >
-
-                    <span class="text-lg">
-                        👨‍🎓
-                    </span>
-
-                    <span>
-                        Siswa
-                    </span>
-
-                </a>
-
-
-                {{-- =================================================
-                    ORANG TUA
-                ================================================== --}}
-
-                <a
-                    href="{{ route('orangtua.index') }}"
-                    class="flex items-center gap-3
-                           px-4 py-3
-                           mb-1
-                           rounded-xl
-                           text-sm font-semibold
-                           transition
-                           {{ request()->routeIs('orangtua.*')
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
-                >
-
-                    <span class="text-lg">
-                        👨‍👩‍👧
-                    </span>
-
-                    <span>
-                        Orang Tua
-                    </span>
-
-                </a>
-
-
-                {{-- =================================================
-                    LAPORAN
-                ================================================== --}}
-
-                <a
-                    href="{{ route('laporan.index') }}"
-                    class="flex items-center gap-3
-                           px-4 py-3
-                           mb-1
-                           rounded-xl
-                           text-sm font-semibold
-                           transition
-                           {{ request()->routeIs('laporan.*')
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700' }}"
-                >
-
-                    <span class="text-lg">
-                        📊
-                    </span>
-
-                    <span>
-                        Laporan
-                    </span>
-
-                </a>
-
-            </nav>
-
-
-            {{-- =================================================
-                LOGOUT
-            ================================================== --}}
-
-            <div class="p-4 border-t border-slate-100">
-
-                <form
-                    method="POST"
-                    action="{{ route('logout') }}"
-                >
-
-                    @csrf
-
-                    <button
-                        type="submit"
-                        class="w-full
-                               flex items-center justify-center gap-2
-                               px-4 py-3
-                               rounded-xl
-                               text-sm font-semibold
-                               text-red-600
-                               bg-red-50
-                               hover:bg-red-100
-                               transition"
-                    >
-
-                        <span>
-                            🚪
-                        </span>
-
-                        <span>
-                            Keluar dari Akun
-                        </span>
-
-                    </button>
-
-                </form>
-
-            </div>
-
-        </aside>
-
-
-        {{-- =====================================================
-            MAIN AREA
-        ====================================================== --}}
-
-        <div class="ml-72 min-h-screen">
-
-
-            {{-- =================================================
-                HEADER
-            ================================================== --}}
-
-            <header
-                class="sticky top-0 z-30
-                       h-20
-                       bg-white/90
-                       backdrop-blur
-                       border-b border-slate-200"
-            >
-
-                <div
-                    class="h-full
-                           px-8
-                           flex items-center justify-between"
-                >
-
-                    {{-- PAGE TITLE --}}
-
-                    <div>
 
-                        <p
-                            class="text-xs
-                                   font-semibold
-                                   uppercase
-                                   tracking-wider
-                                   text-indigo-600"
-                        >
-                            Admin Panel
-                        </p>
 
-                        <h2 class="text-xl font-bold text-slate-900">
 
-                            @yield(
-                                'page-title',
-                                'Dashboard'
-                            )
+{{-- BRAND --}}
 
-                        </h2>
 
-                    </div>
+<div class="
+px-7
+py-7
+border-b
+border-white/10
+">
 
 
-                    {{-- =================================================
-                        RIGHT HEADER
-                    ================================================== --}}
+<div class="flex items-center gap-4">
 
-                    <div class="flex items-center gap-4">
 
+<div
 
-                        {{-- Notification --}}
+class="
+w-12
+h-12
+rounded-2xl
+bg-indigo-600
+flex
+items-center
+justify-center
+font-bold
+text-xl
+shadow-lg
+">
 
-                        <button
-                            type="button"
-                            class="relative
-                                   w-10 h-10
-                                   rounded-xl
-                                   bg-slate-50
-                                   hover:bg-indigo-50
-                                   flex items-center justify-center
-                                   transition"
-                        >
+K
 
-                            🔔
+</div>
 
-                            <span
-                                class="absolute
-                                       top-2
-                                       right-2
-                                       w-2
-                                       h-2
-                                       bg-red-500
-                                       rounded-full
-                                       border-2
-                                       border-white"
-                            ></span>
 
-                        </button>
 
 
-                        {{-- User --}}
+<div>
 
-                        <div class="flex items-center gap-3">
 
-                            <div
-                                class="w-10 h-10
-                                       rounded-xl
-                                       bg-indigo-600
-                                       text-white
-                                       flex items-center justify-center
-                                       font-bold"
-                            >
+<h1 class="
+text-xl
+font-bold
+tracking-wide
+">
 
-                                {{ strtoupper(
-                                    substr(
-                                        Auth::user()->name ?? 'A',
-                                        0,
-                                        1
-                                    )
-                                ) }}
+G7KAIH
 
-                            </div>
+</h1>
 
 
-                            <div class="hidden sm:block">
+<p class="
+text-xs
+text-slate-400
+">
 
-                                <p class="text-sm font-semibold text-slate-800">
+Administrator Panel
 
-                                    {{ Auth::user()->name ?? 'Admin' }}
+</p>
 
-                                </p>
 
-                                <p class="text-xs text-slate-400">
-                                    Administrator
-                                </p>
+</div>
 
-                            </div>
 
-                        </div>
 
-                    </div>
+</div>
 
-                </div>
 
-            </header>
+</div>
 
 
-            {{-- =====================================================
-                MAIN CONTENT
-            ====================================================== --}}
 
-            <main class="p-6 lg:p-8">
 
 
-                {{-- =================================================
-                    SUCCESS MESSAGE
-                ================================================== --}}
 
-                @if(session('success'))
 
-                    <div
-                        class="mb-6
-                               flex items-center gap-3
-                               bg-emerald-50
-                               border border-emerald-200
-                               text-emerald-700
-                               px-5 py-4
-                               rounded-2xl"
-                    >
 
-                        <div
-                            class="w-9 h-9
-                                   rounded-xl
-                                   bg-emerald-100
-                                   flex items-center justify-center"
-                        >
-                            ✓
-                        </div>
 
-                        <div>
+{{-- MENU --}}
 
-                            <p class="font-semibold">
-                                Berhasil
-                            </p>
 
-                            <p class="text-sm">
-                                {{ session('success') }}
-                            </p>
+<nav class="
+flex-1
+px-5
+py-6
+">
 
-                        </div>
 
-                    </div>
 
-                @endif
 
 
-                {{-- =================================================
-                    ERROR MESSAGE
-                ================================================== --}}
+<p class="
+text-xs
+uppercase
+tracking-widest
+text-slate-500
+px-3
+mb-4
+">
 
-                @if(session('error'))
+Menu Utama
 
-                    <div
-                        class="mb-6
-                               flex items-center gap-3
-                               bg-red-50
-                               border border-red-200
-                               text-red-700
-                               px-5 py-4
-                               rounded-2xl"
-                    >
+</p>
 
-                        <div
-                            class="w-9 h-9
-                                   rounded-xl
-                                   bg-red-100
-                                   flex items-center justify-center"
-                        >
-                            !
-                        </div>
 
-                        <div>
 
-                            <p class="font-semibold">
-                                Terjadi Kesalahan
-                            </p>
 
-                            <p class="text-sm">
-                                {{ session('error') }}
-                            </p>
 
-                        </div>
 
-                    </div>
 
-                @endif
+{{-- DASHBOARD --}}
 
+<a href="{{ route('admin.dashboard') }}"
 
-                {{-- =================================================
-                    VALIDATION ERRORS
-                ================================================== --}}
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+mb-2
+text-sm
+transition
 
-                @if($errors->any())
+{{ request()->routeIs('admin.dashboard')
 
-                    <div
-                        class="mb-6
-                               bg-red-50
-                               border border-red-200
-                               text-red-700
-                               px-5 py-4
-                               rounded-2xl"
-                    >
+?
+'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
 
-                        <div class="flex items-start gap-3">
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
 
-                            <div
-                                class="w-9 h-9
-                                       flex-shrink-0
-                                       rounded-xl
-                                       bg-red-100
-                                       flex items-center justify-center"
-                            >
-                                !
-                            </div>
+}}
+">
 
-                            <div>
 
-                                <p class="font-semibold mb-1">
-                                    Terdapat kesalahan
-                                </p>
+<span class="w-5">
+⌂
+</span>
 
-                                <ul class="text-sm space-y-1">
 
-                                    @foreach($errors->all() as $error)
+Dashboard
 
-                                        <li>
-                                            • {{ $error }}
-                                        </li>
 
-                                    @endforeach
+</a>
 
-                                </ul>
 
-                            </div>
 
-                        </div>
 
-                    </div>
 
-                @endif
 
 
-                {{-- =================================================
-                    PAGE CONTENT
-                ================================================== --}}
 
-                @yield('content')
 
+<p class="
+text-xs
+uppercase
+tracking-widest
+text-slate-500
+px-3
+mt-6
+mb-3
+">
 
-            </main>
+Master Data
 
-        </div>
+</p>
 
-    </div>
+
+
+
+
+
+
+<a href="{{ route('jurusan.index') }}"
+
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+mb-2
+text-sm
+transition
+
+{{ request()->routeIs('jurusan.*')
+
+?
+'bg-indigo-600 text-white'
+
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+">
+
+
+<span class="w-5">
+▣
+</span>
+
+
+Jurusan
+
+
+</a>
+
+
+
+
+
+
+
+<a href="{{ route('kelas.index') }}"
+
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+mb-2
+text-sm
+transition
+
+{{ request()->routeIs('kelas.*')
+
+?
+'bg-indigo-600 text-white'
+
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+">
+
+
+<span class="w-5">
+▤
+</span>
+
+
+Kelas
+
+
+</a>
+
+
+
+
+
+
+
+
+<a href="{{ route('siswa.index') }}"
+
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+mb-2
+text-sm
+transition
+
+{{ request()->routeIs('siswa.*')
+
+?
+'bg-indigo-600 text-white'
+
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+">
+
+
+<span class="w-5">
+◉
+</span>
+
+
+Siswa
+
+
+</a>
+
+
+
+
+
+
+
+
+<a href="{{ route('orangtua.index') }}"
+
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+mb-2
+text-sm
+transition
+
+{{ request()->routeIs('orangtua.*')
+
+?
+'bg-indigo-600 text-white'
+
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+">
+
+
+<span class="w-5">
+◎
+</span>
+
+
+Orang Tua
+
+
+</a>
+
+
+
+
+
+
+
+
+
+
+<p class="
+text-xs
+uppercase
+tracking-widest
+text-slate-500
+px-3
+mt-6
+mb-3
+">
+
+Manajemen Akun
+
+</p>
+
+
+
+
+
+
+
+<a href="{{ route('admin.akun.orangtua') }}"
+
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+mb-2
+text-sm
+transition
+
+{{ request()->routeIs('admin.akun.orangtua')
+
+?
+'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+">
+
+
+<span class="w-5">
+🔑
+</span>
+
+
+Akun Orang Tua
+
+
+</a>
+
+
+
+
+
+
+
+<p class="
+
+text-xs
+
+uppercase
+
+tracking-widest
+
+text-slate-500
+
+px-3
+
+mt-6
+
+mb-3
+
+">
+
+Monitoring
+
+</p>
+
+<a href="{{ route('angket.index') }}"
+
+class="
+
+flex
+
+items-center
+
+gap-3
+
+px-4
+
+py-3
+
+rounded-xl
+
+mb-2
+
+text-sm
+
+transition
+
+{{ request()->routeIs('angket.*')
+
+?
+
+'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+
+:
+
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+
+">
+
+<span class="w-5">
+
+📋
+
+</span>
+
+Angket Harian
+
+</a>
+
+
+
+
+
+
+<a href="{{ route('laporan.index') }}"
+
+class="
+flex
+items-center
+gap-3
+px-4
+py-3
+rounded-xl
+text-sm
+transition
+
+{{ request()->routeIs('laporan.*')
+
+?
+'bg-indigo-600 text-white'
+
+:
+'text-slate-300 hover:bg-white/5 hover:text-white'
+
+}}
+">
+
+
+<span class="w-5">
+▥
+</span>
+
+
+Laporan
+
+
+</a>
+
+
+
+
+
+</nav>
+
+
+
+
+
+
+
+
+
+{{-- PROFILE ADMIN --}}
+
+
+
+<div class="
+border-t
+border-white/10
+p-6
+">
+
+
+
+<div class="
+bg-white/5
+rounded-2xl
+p-4
+mb-5
+">
+
+
+<div class="flex items-center gap-3">
+
+
+
+<div
+
+class="
+w-11
+h-11
+rounded-full
+bg-indigo-500
+flex
+items-center
+justify-center
+font-bold
+">
+
+{{ strtoupper(substr(Auth::user()->name ?? 'A',0,1)) }}
+
+
+</div>
+
+
+
+
+<div>
+
+
+<p class="text-sm font-semibold">
+
+{{ Auth::user()->name ?? 'Admin' }}
+
+</p>
+
+
+<p class="text-xs text-slate-400">
+
+Administrator
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<form method="POST"
+
+action="{{ route('logout') }}">
+
+@csrf
+
+
+<button
+
+class="
+w-full
+py-3
+rounded-xl
+border
+border-white/20
+text-slate-300
+text-sm
+hover:bg-red-500
+hover:text-white
+hover:border-red-500
+transition
+">
+
+
+Keluar
+
+
+</button>
+
+
+</form>
+
+
+
+</div>
+
+
+
+
+
+
+</aside>
+
+
+
+
+
+
+
+
+
+{{-- CONTENT --}}
+
+
+
+<div class="ml-72 flex-1">
+
+
+
+
+
+
+{{-- HEADER --}}
+
+
+<header
+
+class="
+bg-white
+border-b
+px-10
+py-6
+">
+
+
+<div class="flex justify-between items-center">
+
+
+
+<div>
+
+
+<h1 class="
+text-xl
+font-bold
+text-slate-800
+">
+
+
+@yield(
+'page-title',
+'Dashboard Admin'
+)
+
+
+</h1>
+
+
+<p class="
+text-sm
+text-slate-500
+mt-1
+">
+
+Sistem Informasi Akademik G7KAIH
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="flex items-center gap-3">
+
+
+<div class="text-right">
+
+
+<p class="text-sm font-semibold">
+
+{{ Auth::user()->name ?? 'Admin' }}
+
+</p>
+
+
+<p class="text-xs text-slate-400">
+
+Administrator
+
+</p>
+
+
+</div>
+
+
+
+
+<div
+
+class="
+w-11
+h-11
+rounded-full
+bg-indigo-100
+text-indigo-700
+flex
+items-center
+justify-center
+font-bold
+">
+
+{{ strtoupper(substr(Auth::user()->name ?? 'A',0,1)) }}
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<main class="p-10">
+
+
+
+
+
+
+@if(session('success'))
+
+<div
+
+class="
+mb-6
+rounded-xl
+bg-emerald-50
+border
+border-emerald-200
+px-5
+py-4
+text-sm
+text-emerald-700
+">
+
+{{ session('success') }}
+
+</div>
+
+@endif
+
+
+
+
+
+
+@if(session('error'))
+
+<div
+
+class="
+mb-6
+rounded-xl
+bg-red-50
+border
+border-red-200
+px-5
+py-4
+text-sm
+text-red-700
+">
+
+{{ session('error') }}
+
+</div>
+
+@endif
+
+
+
+
+
+
+@yield('content')
+
+
+
+
+
+
+<footer
+
+class="
+mt-12
+text-center
+text-xs
+text-slate-400
+">
+
+© {{ date('Y') }} G7KAIH Administrator System
+
+</footer>
+
+
+
+
+</main>
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
 
 </body>
+
 
 </html>

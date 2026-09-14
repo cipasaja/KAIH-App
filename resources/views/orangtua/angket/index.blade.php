@@ -1,628 +1,597 @@
-@extends('orangtua.layout.app')
+@extends('layouts.orangtua')
 
-@section('title', 'Angket Harian')
+@section('title','Riwayat Angket')
+
+@section('page-title')
+    Riwayat Angket Harian
+@endsection
 
 @section('content')
 
-<div class="max-w-7xl mx-auto px-4 py-8">
+<div class="space-y-6">
 
-    {{-- =====================================================
-         HEADER
-    ====================================================== --}}
-    <div class="flex flex-col lg:flex-row lg:items-center
-                lg:justify-between gap-4 mb-8">
+    {{-- HEADER --}}
+    <div class="bg-white border rounded-xl p-6">
 
-        <div>
+        <div class="flex justify-between items-center">
 
-            <p class="text-sm font-medium text-indigo-600 mb-1">
-                KAIH App
-            </p>
-
-            <h1 class="text-3xl font-bold text-gray-900">
-                Angket Harian
-            </h1>
-
-            <p class="text-gray-500 mt-2">
-                Catatan kebiasaan harian anak yang diisi oleh orang tua.
-            </p>
-
-        </div>
-
-
-        {{-- BUTTON ISI ANGKET --}}
-        <a
-            href="{{ route('orangtua.angket.create') }}"
-            class="inline-flex items-center justify-center gap-2
-                   bg-indigo-600 hover:bg-indigo-700
-                   text-white font-semibold
-                   px-5 py-3 rounded-xl
-                   shadow-sm transition"
-        >
-
-            <span class="text-lg">
-                +
-            </span>
-
-            Isi Angket Hari Ini
-
-        </a>
-
-    </div>
-
-
-    {{-- =====================================================
-         SUCCESS
-    ====================================================== --}}
-    @if(session('success'))
-
-        <div
-            class="mb-6 bg-green-50 border border-green-200
-                   text-green-700 px-5 py-4 rounded-xl"
-        >
-
-            <div class="flex items-center gap-3">
-
-                <span class="text-lg">
-                    ✓
-                </span>
-
-                <span class="font-medium">
-                    {{ session('success') }}
-                </span>
-
-            </div>
-
-        </div>
-
-    @endif
-
-
-    {{-- =====================================================
-         ERROR
-    ====================================================== --}}
-    @if(session('error'))
-
-        <div
-            class="mb-6 bg-red-50 border border-red-200
-                   text-red-700 px-5 py-4 rounded-xl"
-        >
-
-            <div class="flex items-center gap-3">
-
-                <span class="text-lg">
-                    !
-                </span>
-
-                <span class="font-medium">
-                    {{ session('error') }}
-                </span>
-
-            </div>
-
-        </div>
-
-    @endif
-
-
-    {{-- =====================================================
-         ERROR VALIDASI
-    ====================================================== --}}
-    @if($errors->any())
-
-        <div
-            class="mb-6 bg-red-50 border border-red-200
-                   text-red-700 px-5 py-4 rounded-xl"
-        >
-
-            <ul class="list-disc ml-5 space-y-1">
-
-                @foreach($errors->all() as $error)
-
-                    <li>
-                        {{ $error }}
-                    </li>
-
-                @endforeach
-
-            </ul>
-
-        </div>
-
-    @endif
-
-
-    {{-- =====================================================
-         INFO DATA ANAK
-    ====================================================== --}}
-    <div
-        class="bg-gradient-to-r from-indigo-600 to-indigo-700
-               rounded-2xl p-6 text-white
-               shadow-sm mb-6"
-    >
-
-        <div
-            class="flex flex-col sm:flex-row
-                   sm:items-center sm:justify-between
-                   gap-5"
-        >
-
-            {{-- DATA ANAK --}}
             <div>
 
-                <p class="text-indigo-200 text-sm font-medium">
-                    Anak
-                </p>
-
-                <h2 class="text-2xl font-bold mt-1">
-                    {{ $orangTua->siswa->nama_siswa }}
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Aktivitas Harian Anak
                 </h2>
 
-                <p class="text-indigo-200 text-sm mt-1">
-                    NIS: {{ $orangTua->siswa->nis }}
+                <p class="text-sm text-gray-500 mt-1">
+                    Riwayat laporan aktivitas anak.
                 </p>
 
             </div>
 
-
-            {{-- TOTAL ANGKET --}}
-            <div class="text-left sm:text-right">
-
-                <p class="text-indigo-200 text-sm">
-                    Total angket
-                </p>
-
-                <p class="text-3xl font-bold">
-                    {{ $angket->count() }}
-                </p>
-
-            </div>
+            <a href="{{ route('orangtua.angket.create') }}"
+               class="
+                    bg-indigo-600
+                    hover:bg-indigo-700
+                    text-white
+                    px-5
+                    py-2.5
+                    rounded-lg
+                    text-sm
+               ">
+                + Isi Angket
+            </a>
 
         </div>
 
     </div>
 
 
-    {{-- =====================================================
-         RIWAYAT ANGKET
-    ====================================================== --}}
-    <div
-        class="bg-white rounded-2xl shadow-sm
-               border border-gray-100 overflow-hidden"
-    >
+    {{-- LIST --}}
+    <div class="bg-white border rounded-xl p-6">
 
-        {{-- HEADER RIWAYAT --}}
-        <div class="px-6 py-5 border-b border-gray-100">
-
-            <h3 class="text-lg font-bold text-gray-800">
-                Riwayat Angket Harian
-            </h3>
-
-            <p class="text-sm text-gray-500 mt-1">
-                Daftar pengisian angket harian anak.
-            </p>
-
-        </div>
+        <h3 class="font-semibold text-gray-800 mb-6">
+            Riwayat Terbaru
+        </h3>
 
 
-        {{-- =================================================
-             TABLE
-        ================================================== --}}
-        <div class="overflow-x-auto">
+        @if($angketHarian->count())
 
-            <table class="w-full min-w-[1200px]">
+            <div class="space-y-5">
 
-                {{-- TABLE HEADER --}}
-                <thead class="bg-gray-50">
+                @foreach($angketHarian as $item)
 
-                    <tr>
+                    @php
 
-                        {{-- NO --}}
-                        <th
-                            class="px-6 py-4 text-left text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            No
-                        </th>
+                        $totalIbadah =
+                            $item->sholat_subuh +
+                            $item->sholat_dzuhur +
+                            $item->sholat_ashar +
+                            $item->sholat_magrib +
+                            $item->sholat_isya;
 
+                        $tanggalAktivitas =
+                            \Carbon\Carbon::parse(
+                                $item->tanggal
+                            )->format('Y-m-d');
 
-                        {{-- TANGGAL --}}
-                        <th
-                            class="px-6 py-4 text-left text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            Tanggal
-                        </th>
+                        $tanggalIsi =
+                            $item->tanggal_pengisian
+                            ?
+                            \Carbon\Carbon::parse(
+                                $item->tanggal_pengisian
+                            )->format('Y-m-d')
+                            :
+                            null;
 
-
-                        {{-- BANGUN --}}
-                        <th
-                            class="px-6 py-4 text-left text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            Bangun
-                        </th>
+                    @endphp
 
 
-                        {{-- KEGIATAN --}}
-                        <th
-                            class="px-6 py-4 text-left text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            Kegiatan
-                        </th>
+                    <div class="
+                        border
+                        rounded-xl
+                        p-5
+                        hover:shadow-md
+                        transition
+                    ">
 
 
-                        {{-- SHOLAT --}}
-                        <th
-                            class="px-6 py-4 text-left text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            Sholat 5 Waktu
-                        </th>
+                        {{-- HEADER ITEM --}}
+                        <div class="
+                            flex
+                            justify-between
+                            items-start
+                        ">
 
 
-                        {{-- BELAJAR --}}
-                        <th
-                            class="px-6 py-4 text-center text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            Belajar
-                        </th>
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+                                    Tanggal Aktivitas
+                                </p>
+
+                                <h4 class="font-semibold text-gray-800">
+
+                                    {{
+                                        \Carbon\Carbon::parse(
+                                            $item->tanggal
+                                        )->format('d F Y')
+                                    }}
+
+                                </h4>
 
 
-                        {{-- TIDUR --}}
-                        <th
-                            class="px-6 py-4 text-left text-xs
-                                   font-semibold text-gray-500
-                                   uppercase tracking-wider"
-                        >
-                            Tidur
-                        </th>
+                                <p class="text-xs text-gray-400 mt-2">
 
-                    </tr>
+                                    Diisi:
 
-                </thead>
+                                    @if($item->tanggal_pengisian)
 
+                                        {{
+                                            \Carbon\Carbon::parse(
+                                                $item->tanggal_pengisian
+                                            )->format('d-m-Y H:i')
+                                        }}
 
-                {{-- =================================================
-                     TABLE BODY
-                ================================================== --}}
-                <tbody class="divide-y divide-gray-100">
+                                    @else
 
-                    @forelse($angket as $item)
-
-                        <tr class="hover:bg-gray-50 transition">
-
-
-                            {{-- =====================================
-                                 NO
-                            ====================================== --}}
-                            <td class="px-6 py-4 text-sm text-gray-500">
-
-                                {{ $loop->iteration }}
-
-                            </td>
-
-
-                            {{-- =====================================
-                                 TANGGAL
-                            ====================================== --}}
-                            <td class="px-6 py-4">
-
-                                <span class="font-semibold text-gray-800">
-
-                                    {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
-
-                                </span>
-
-                            </td>
-
-
-                            {{-- =====================================
-                                 JAM BANGUN
-                            ====================================== --}}
-                            <td class="px-6 py-4">
-
-                                <span class="text-sm text-gray-700">
-
-                                    {{ $item->bangun_pagi ?? '-' }}
-
-                                </span>
-
-                            </td>
-
-
-                            {{-- =====================================
-                                 KEGIATAN MEMBANTU ORANG TUA
-                            ====================================== --}}
-                            <td class="px-6 py-4">
-
-                                @if($item->kegiatan_membantu)
-
-                                    <div class="max-w-xs">
-
-                                        <p
-                                            class="text-sm text-gray-700
-                                                   leading-relaxed"
-                                        >
-                                            {{ $item->kegiatan_membantu }}
-                                        </p>
-
-                                    </div>
-
-                                @else
-
-                                    <span class="text-sm text-gray-400">
                                         -
-                                    </span>
 
-                                @endif
+                                    @endif
 
-                            </td>
+                                </p>
 
-
-                            {{-- =====================================
-                                 SHOLAT 5 WAKTU
-                            ====================================== --}}
-                            <td class="px-6 py-4">
-
-                                <div class="flex flex-wrap gap-1.5">
+                            </div>
 
 
-                                    {{-- SUBUH --}}
-                                    @if($item->sholat_subuh)
+                            {{-- STATUS PENGISIAN --}}
+                            @if($tanggalAktivitas == $tanggalIsi)
 
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-green-50 text-green-700
-                                                   text-xs font-semibold"
-                                        >
-                                            ✓ Subuh
+                                <span class="
+                                    px-3
+                                    py-1
+                                    rounded-full
+                                    text-xs
+                                    font-semibold
+                                    bg-green-100
+                                    text-green-700
+                                ">
+
+                                    ✓ Tepat Waktu
+
+                                </span>
+
+                            @else
+
+                                <span class="
+                                    px-3
+                                    py-1
+                                    rounded-full
+                                    text-xs
+                                    font-semibold
+                                    bg-yellow-100
+                                    text-yellow-700
+                                ">
+
+                                    ⚠ Telat Isi
+
+                                </span>
+
+                            @endif
+
+
+                        </div>
+
+
+                        {{-- RINGKASAN --}}
+                        <div class="
+                            grid
+                            md:grid-cols-3
+                            gap-4
+                            mt-5
+                        ">
+
+
+                            {{-- IBADAH --}}
+                            <div class="
+                                bg-gray-50
+                                rounded-lg
+                                p-4
+                            ">
+
+                                <p class="text-xs text-gray-500">
+                                    Ibadah
+                                </p>
+
+                                <p class="text-xl font-bold mt-2">
+
+                                    {{ $totalIbadah }}/5
+
+                                </p>
+
+                            </div>
+
+
+                            {{-- BELAJAR --}}
+                            <div class="
+                                bg-gray-50
+                                rounded-lg
+                                p-4
+                            ">
+
+                                <p class="text-xs text-gray-500">
+                                    Belajar
+                                </p>
+
+                                <p class="text-xl font-bold mt-2">
+
+                                    @if($item->belajar)
+
+                                        <span class="text-green-600">
+                                            Ya
                                         </span>
 
                                     @else
 
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-gray-100 text-gray-400
-                                                   text-xs font-medium"
-                                        >
-                                            ✕ Subuh
+                                        <span class="text-red-600">
+                                            Tidak
                                         </span>
 
                                     @endif
 
+                                </p>
 
-                                    {{-- DZUHUR --}}
-                                    @if($item->sholat_dzuhur)
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-green-50 text-green-700
-                                                   text-xs font-semibold"
-                                        >
-                                            ✓ Dzuhur
-                                        </span>
-
-                                    @else
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-gray-100 text-gray-400
-                                                   text-xs font-medium"
-                                        >
-                                            ✕ Dzuhur
-                                        </span>
-
-                                    @endif
+                            </div>
 
 
-                                    {{-- ASHAR --}}
-                                    @if($item->sholat_ashar)
+                            {{-- TIDUR --}}
+                            <div class="
+                                bg-gray-50
+                                rounded-lg
+                                p-4
+                            ">
 
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-green-50 text-green-700
-                                                   text-xs font-semibold"
-                                        >
-                                            ✓ Ashar
-                                        </span>
+                                <p class="text-xs text-gray-500">
+                                    Tidur
+                                </p>
 
-                                    @else
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-gray-100 text-gray-400
-                                                   text-xs font-medium"
-                                        >
-                                            ✕ Ashar
-                                        </span>
-
-                                    @endif
-
-
-                                    {{-- MAGRIB --}}
-                                    @if($item->sholat_magrib)
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-green-50 text-green-700
-                                                   text-xs font-semibold"
-                                        >
-                                            ✓ Magrib
-                                        </span>
-
-                                    @else
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-gray-100 text-gray-400
-                                                   text-xs font-medium"
-                                        >
-                                            ✕ Magrib
-                                        </span>
-
-                                    @endif
-
-
-                                    {{-- ISYA --}}
-                                    @if($item->sholat_isya)
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-green-50 text-green-700
-                                                   text-xs font-semibold"
-                                        >
-                                            ✓ Isya
-                                        </span>
-
-                                    @else
-
-                                        <span
-                                            class="inline-flex items-center
-                                                   px-2.5 py-1 rounded-lg
-                                                   bg-gray-100 text-gray-400
-                                                   text-xs font-medium"
-                                        >
-                                            ✕ Isya
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-                            </td>
-
-
-                            {{-- =====================================
-                                 BELAJAR
-                            ====================================== --}}
-                            <td class="px-6 py-4 text-center">
-
-                                @if($item->belajar)
-
-                                    <span
-                                        class="inline-flex items-center
-                                               px-3 py-1 rounded-full
-                                               bg-green-50 text-green-700
-                                               text-xs font-semibold"
-                                    >
-                                        ✓ Ya
-                                    </span>
-
-                                @else
-
-                                    <span
-                                        class="inline-flex items-center
-                                               px-3 py-1 rounded-full
-                                               bg-red-50 text-red-600
-                                               text-xs font-semibold"
-                                    >
-                                        ✕ Tidak
-                                    </span>
-
-                                @endif
-
-                            </td>
-
-
-                            {{-- =====================================
-                                 JAM TIDUR
-                            ====================================== --}}
-                            <td class="px-6 py-4">
-
-                                <span class="text-sm text-gray-700">
+                                <p class="text-xl font-bold mt-2">
 
                                     {{ $item->tidur_malam ?? '-' }}
 
-                                </span>
+                                </p>
 
-                            </td>
-
-                        </tr>
+                            </div>
 
 
-                    @empty
-
-                        {{-- =========================================
-                             EMPTY STATE
-                        ========================================== --}}
-                        <tr>
-
-                            <td
-                                colspan="7"
-                                class="px-6 py-16 text-center"
-                            >
-
-                                <div class="flex flex-col items-center">
+                        </div>
 
 
-                                    {{-- ICON --}}
-                                    <div
-                                        class="w-16 h-16 rounded-2xl
-                                               bg-indigo-50
-                                               flex items-center
-                                               justify-center
-                                               text-3xl mb-4"
-                                    >
-                                        📝
-                                    </div>
+                        {{-- DETAIL IBADAH --}}
+                        <div class="mt-5">
+
+                            <p class="
+                                text-sm
+                                font-semibold
+                                text-gray-700
+                                mb-3
+                            ">
+
+                                Detail Ibadah
+
+                            </p>
 
 
-                                    {{-- TITLE --}}
-                                    <h4 class="font-semibold text-gray-700">
-                                        Belum ada angket
-                                    </h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                @php
+
+                                    $ibadah = [
+
+                                        'Subuh' =>
+                                            $item->sholat_subuh,
+
+                                        'Dzuhur' =>
+                                            $item->sholat_dzuhur,
+
+                                        'Ashar' =>
+                                            $item->sholat_ashar,
+
+                                        'Magrib' =>
+                                            $item->sholat_magrib,
+
+                                        'Isya' =>
+                                            $item->sholat_isya
+
+                                    ];
+
+                                @endphp
 
 
-                                    {{-- DESCRIPTION --}}
-                                    <p
-                                        class="text-sm text-gray-500
-                                               mt-1 mb-5"
-                                    >
-                                        Belum ada pengisian angket harian.
+                                @foreach($ibadah as $nama => $nilai)
+
+                                    @if($nilai)
+
+                                        <span class="
+                                            px-3
+                                            py-1
+                                            rounded-full
+                                            text-xs
+                                            bg-green-100
+                                            text-green-700
+                                        ">
+
+                                            ✓ {{ $nama }}
+
+                                        </span>
+
+                                    @else
+
+                                        @if($item->alasan_tidak_sholat)
+
+                                            <span class="
+                                                px-3
+                                                py-1
+                                                rounded-full
+                                                text-xs
+                                                bg-yellow-100
+                                                text-yellow-700
+                                            ">
+
+                                                ⚠ {{ $nama }}
+
+                                            </span>
+
+                                        @else
+
+                                            <span class="
+                                                px-3
+                                                py-1
+                                                rounded-full
+                                                text-xs
+                                                bg-gray-100
+                                                text-gray-500
+                                            ">
+
+                                                ✕ {{ $nama }}
+
+                                            </span>
+
+                                        @endif
+
+                                    @endif
+
+                                @endforeach
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- MAKANAN BERGIZI (Isi Piringku) --}}
+                        <div class="mt-5">
+
+                            <p class="
+                                text-sm
+                                font-semibold
+                                text-gray-700
+                                mb-3
+                            ">
+
+                                Makanan Bergizi (Isi Piringku)
+
+                            </p>
+
+
+                            <div class="flex flex-wrap gap-2">
+
+
+                                {{-- SARAPAN --}}
+                                @if($item->sarapan)
+
+                                    <span class="
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        text-xs
+                                        bg-green-100
+                                        text-green-700
+                                    ">
+
+                                        ✓ Sarapan
+
+                                    </span>
+
+                                @else
+
+                                    <span class="
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        text-xs
+                                        bg-gray-100
+                                        text-gray-500
+                                    ">
+
+                                        ✕ Sarapan
+
+                                    </span>
+
+                                @endif
+
+
+                                {{-- MAKAN SIANG --}}
+                                @if($item->makan_siang)
+
+                                    <span class="
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        text-xs
+                                        bg-green-100
+                                        text-green-700
+                                    ">
+
+                                        ✓ Makan Siang
+
+                                    </span>
+
+                                @else
+
+                                    <span class="
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        text-xs
+                                        bg-gray-100
+                                        text-gray-500
+                                    ">
+
+                                        ✕ Makan Siang
+
+                                    </span>
+
+                                @endif
+
+
+                                {{-- MAKAN MALAM --}}
+                                @if($item->makan_malam)
+
+                                    <span class="
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        text-xs
+                                        bg-green-100
+                                        text-green-700
+                                    ">
+
+                                        ✓ Makan Malam
+
+                                    </span>
+
+                                @else
+
+                                    <span class="
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        text-xs
+                                        bg-gray-100
+                                        text-gray-500
+                                    ">
+
+                                        ✕ Makan Malam
+
+                                    </span>
+
+                                @endif
+
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- ALASAN TIDAK SHOLAT --}}
+                        @if($item->alasan_tidak_sholat)
+
+                            <div class="mt-5">
+
+                                <p class="
+                                    text-sm
+                                    font-semibold
+                                    text-gray-700
+                                    mb-2
+                                ">
+
+                                    Keterangan Ibadah
+
+                                </p>
+
+
+                                <div class="
+                                    bg-yellow-50
+                                    border
+                                    border-yellow-200
+                                    rounded-lg
+                                    p-4
+                                ">
+
+                                    <p class="
+                                        text-sm
+                                        font-semibold
+                                        text-yellow-700
+                                    ">
+
+                                        ⚠ Alasan Tidak Sholat
+
                                     </p>
 
 
-                                    {{-- BUTTON --}}
-                                    <a
-                                        href="{{ route('orangtua.angket.create') }}"
-                                        class="bg-indigo-600 hover:bg-indigo-700
-                                               text-white font-semibold
-                                               px-4 py-2.5 rounded-xl
-                                               transition"
-                                    >
-                                        + Isi Angket Hari Ini
-                                    </a>
+                                    <p class="
+                                        text-sm
+                                        text-yellow-800
+                                        mt-1
+                                    ">
+
+                                        {{ $item->alasan_tidak_sholat }}
+
+                                    </p>
 
                                 </div>
 
-                            </td>
+                            </div>
 
-                        </tr>
+                        @endif
 
-                    @endforelse
 
-                </tbody>
+                        {{-- KEGIATAN MEMBANTU --}}
+                        @if($item->kegiatan_membantu)
 
-            </table>
+                            <div class="mt-5">
 
-        </div>
+                                <p class="text-sm text-gray-500">
+                                    Kegiatan Membantu
+                                </p>
+
+
+                                <div class="
+                                    mt-2
+                                    bg-gray-50
+                                    rounded-lg
+                                    p-3
+                                    text-gray-700
+                                ">
+
+                                    {{ $item->kegiatan_membantu }}
+
+                                </div>
+
+                            </div>
+
+                        @endif
+
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+
+        @else
+
+            <div class="
+                text-center
+                py-10
+                text-gray-500
+            ">
+
+                Belum ada riwayat angket.
+
+            </div>
+
+        @endif
+
 
     </div>
 

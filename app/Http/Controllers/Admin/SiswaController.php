@@ -20,26 +20,35 @@ class SiswaController extends Controller
     public function index(Request $request)
     {
         /*
-        |--------------------------------------------------------------------------
-        | QUERY DATA SISWA
-        |--------------------------------------------------------------------------
-        |
-        | with('kelas') digunakan supaya data kelas ikut diambil.
+        |------------------------------------------------------------------
+        | DATA KELAS
+        |------------------------------------------------------------------
+        | Digunakan untuk menampilkan daftar kelas dan jumlah siswa.
         |
         */
 
-        $query = Siswa::with('kelas');
+        $kelas = Kelas::with('jurusan')
+            ->withCount('siswas')
+            ->orderBy('nama_kelas', 'asc')
+            ->get();
 
 
         /*
-        |--------------------------------------------------------------------------
-        | FITUR PENCARIAN
-        |--------------------------------------------------------------------------
-        |
-        | Bisa mencari berdasarkan:
-        | - Nama siswa
-        | - NIS
-        |
+        |------------------------------------------------------------------
+        | QUERY DATA SISWA
+        |------------------------------------------------------------------
+        */
+
+        $query = Siswa::with([
+            'kelas',
+            'orangTua.user'
+        ]);
+
+
+        /*
+        |------------------------------------------------------------------
+        | PENCARIAN SISWA
+        |------------------------------------------------------------------
         */
 
         if ($request->filled('search')) {
@@ -59,41 +68,83 @@ class SiswaController extends Controller
                     'like',
                     '%' . $search . '%'
                 );
-
             });
         }
 
 
         /*
-        |--------------------------------------------------------------------------
-        | URUTAN DATA
-        |--------------------------------------------------------------------------
-        |
-        | id ASC = data yang pertama kali ditambahkan
-        | akan berada di No 1.
-        |
-        | Contoh:
-        |
-        | Data pertama  -> No 1
-        | Data kedua    -> No 2
-        | Data ketiga   -> No 3
+        |------------------------------------------------------------------
+        | FILTER BERDASARKAN KELAS
+        |------------------------------------------------------------------
+        */
+
+        if ($request->filled('kelas_id')) {
+
+            $query->where(
+                'kelas_id',
+                $request->kelas_id
+            );
+        }
+
+
+        /*
+        |------------------------------------------------------------------
+        | PAGINATION
+        |------------------------------------------------------------------
+        | View index menggunakan:
+        | $siswas->total()
+        | $siswas->firstItem()
+        | $siswas->links()
         |
         */
 
         $siswas = $query
             ->orderBy('id', 'asc')
-            ->get();
+            ->paginate(20)
+            ->withQueryString();
 
 
         /*
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         | TAMPILKAN VIEW
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         */
 
         return view(
             'admin.siswa.index',
-            compact('siswas')
+            compact(
+                'siswas',
+                'kelas'
+            )
+        );
+    }
+
+
+    /**
+     * =========================================================
+     * MENAMPILKAN DATA SISWA BERDASARKAN KELAS
+     * =========================================================
+     */
+    public function kelas($id)
+    {
+        $kelas = Kelas::with('jurusan')
+            ->findOrFail($id);
+
+        $siswas = Siswa::with([
+                'kelas',
+                'orangTua.user'
+            ])
+            ->where('kelas_id', $id)
+            ->orderBy('id', 'asc')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view(
+            'admin.siswa.kelas',
+            compact(
+                'kelas',
+                'siswas'
+            )
         );
     }
 

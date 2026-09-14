@@ -1,473 +1,1652 @@
-@extends('orangtua.layout.app')
+@extends('layouts.orangtua')
 
-@section('title', 'Isi Angket Harian')
 
-@section('page-title', 'Isi Angket Harian')
+@section('title','Isi Angket')
+
+
+@section('page-title','Isi Angket Harian')
+
+
 
 @section('content')
 
-<div class="max-w-4xl mx-auto px-4 py-8">
 
-    {{-- HEADER --}}
-    <div class="mb-8">
+<div class="space-y-6">
 
-        <p class="text-sm font-medium text-indigo-600 mb-1">
-            KAIH App
-        </p>
 
-        <h1 class="text-3xl font-bold text-gray-900">
-            Angket Harian
-        </h1>
 
-        <p class="text-gray-500 mt-2">
-            Isi kebiasaan harian anak.
-        </p>
+{{-- HEADER --}}
 
-    </div>
+<div class="
+bg-white
+rounded-2xl
+border
+p-6
+">
 
 
-    {{-- ERROR --}}
-    @if($errors->any())
+<div class="flex justify-between items-center">
 
-        <div class="mb-6 bg-red-50 border border-red-200
-                    text-red-700 px-5 py-4 rounded-xl">
 
-            <ul class="list-disc ml-5">
+<div>
 
-                @foreach($errors->all() as $error)
 
-                    <li>
-                        {{ $error }}
-                    </li>
+<h2 class="
+text-xl
+font-bold
+text-slate-800
+">
 
-                @endforeach
+Isi Angket Harian
 
-            </ul>
+</h2>
 
-        </div>
 
-    @endif
+<p class="
+text-sm
+text-slate-500
+mt-1
+">
 
+Catat aktivitas harian anak.
 
-    {{-- FORM CARD --}}
-    <div class="bg-white rounded-2xl shadow-sm
-                border border-gray-100 p-6">
+</p>
 
-
-        {{-- DATA ANAK --}}
-        <div class="mb-8">
-
-            <h2 class="text-xl font-bold text-gray-800">
-                Data Anak
-            </h2>
-
-            <p class="text-gray-500 mt-1">
-
-                {{ $orangTua->siswa->nama_siswa }}
-
-                — NIS {{ $orangTua->siswa->nis }}
-
-            </p>
-
-        </div>
-
-
-        {{-- FORM --}}
-        <form
-            action="{{ route('orangtua.angket.store') }}"
-            method="POST"
-        >
-
-            @csrf
-
-
-            {{-- =========================================
-                 TANGGAL
-            ========================================== --}}
-            <div class="mb-6">
-
-                <label
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Tanggal
-                </label>
-
-                <input
-                    type="date"
-                    name="tanggal"
-                    value="{{ old('tanggal', date('Y-m-d')) }}"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    required
-                >
-
-            </div>
-
-
-            {{-- =========================================
-                 JAM BANGUN PAGI
-            ========================================== --}}
-            <div class="mb-6">
-
-                <label
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Jam Bangun Pagi
-                </label>
-
-                <input
-                    type="text"
-                    name="bangun_pagi"
-                    value="{{ old('bangun_pagi') }}"
-                    placeholder="Contoh: 05:30"
-                    maxlength="5"
-                    inputmode="numeric"
-                    pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-
-                <p class="text-xs text-gray-400 mt-2">
-                    Gunakan format 24 jam, contoh:
-                    <span class="font-semibold">05:30</span>
-                </p>
-
-            </div>
-
-
-            {{-- =========================================
-                 SHOLAT 5 WAKTU
-            ========================================== --}}
-            <div class="mb-6">
-
-                <label
-                    class="block text-sm font-semibold text-gray-700 mb-3"
-                >
-                    Sholat 5 Waktu
-                </label>
-
-                <p class="text-sm text-gray-500 mb-4">
-                    Centang sholat yang dilakukan anak hari ini.
-                </p>
-
-
-                <div class="grid sm:grid-cols-2 gap-3">
-
-
-                    {{-- SUBUH --}}
-                    <label
-                        class="flex items-center gap-3 p-4
-                               border border-gray-200
-                               rounded-xl
-                               cursor-pointer
-                               hover:bg-indigo-50
-                               transition"
-                    >
-
-                        <input
-                            type="checkbox"
-                            name="sholat_subuh"
-                            value="1"
-                            {{ old('sholat_subuh') ? 'checked' : '' }}
-                            class="w-5 h-5 text-indigo-600
-                                   border-gray-300 rounded
-                                   focus:ring-indigo-500"
-                        >
-
-                        <div>
-                            <span class="font-semibold text-gray-800">
-                                Subuh
-                            </span>
-
-                            <p class="text-xs text-gray-400">
-                                Sholat Subuh
-                            </p>
-                        </div>
-
-                    </label>
-
-
-                    {{-- DZUHUR --}}
-                    <label
-                        class="flex items-center gap-3 p-4
-                               border border-gray-200
-                               rounded-xl
-                               cursor-pointer
-                               hover:bg-indigo-50
-                               transition"
-                    >
-
-                        <input
-                            type="checkbox"
-                            name="sholat_dzuhur"
-                            value="1"
-                            {{ old('sholat_dzuhur') ? 'checked' : '' }}
-                            class="w-5 h-5 text-indigo-600
-                                   border-gray-300 rounded
-                                   focus:ring-indigo-500"
-                        >
-
-                        <div>
-                            <span class="font-semibold text-gray-800">
-                                Dzuhur
-                            </span>
-
-                            <p class="text-xs text-gray-400">
-                                Sholat Dzuhur
-                            </p>
-                        </div>
-
-                    </label>
-
-
-                    {{-- ASHAR --}}
-                    <label
-                        class="flex items-center gap-3 p-4
-                               border border-gray-200
-                               rounded-xl
-                               cursor-pointer
-                               hover:bg-indigo-50
-                               transition"
-                    >
-
-                        <input
-                            type="checkbox"
-                            name="sholat_ashar"
-                            value="1"
-                            {{ old('sholat_ashar') ? 'checked' : '' }}
-                            class="w-5 h-5 text-indigo-600
-                                   border-gray-300 rounded
-                                   focus:ring-indigo-500"
-                        >
-
-                        <div>
-                            <span class="font-semibold text-gray-800">
-                                Ashar
-                            </span>
-
-                            <p class="text-xs text-gray-400">
-                                Sholat Ashar
-                            </p>
-                        </div>
-
-                    </label>
-
-
-                    {{-- MAGRIB --}}
-                    <label
-                        class="flex items-center gap-3 p-4
-                               border border-gray-200
-                               rounded-xl
-                               cursor-pointer
-                               hover:bg-indigo-50
-                               transition"
-                    >
-
-                        <input
-                            type="checkbox"
-                            name="sholat_magrib"
-                            value="1"
-                            {{ old('sholat_magrib') ? 'checked' : '' }}
-                            class="w-5 h-5 text-indigo-600
-                                   border-gray-300 rounded
-                                   focus:ring-indigo-500"
-                        >
-
-                        <div>
-                            <span class="font-semibold text-gray-800">
-                                Magrib
-                            </span>
-
-                            <p class="text-xs text-gray-400">
-                                Sholat Magrib
-                            </p>
-                        </div>
-
-                    </label>
-
-
-                    {{-- ISYA --}}
-                    <label
-                        class="flex items-center gap-3 p-4
-                               border border-gray-200
-                               rounded-xl
-                               cursor-pointer
-                               hover:bg-indigo-50
-                               transition"
-                    >
-
-                        <input
-                            type="checkbox"
-                            name="sholat_isya"
-                            value="1"
-                            {{ old('sholat_isya') ? 'checked' : '' }}
-                            class="w-5 h-5 text-indigo-600
-                                   border-gray-300 rounded
-                                   focus:ring-indigo-500"
-                        >
-
-                        <div>
-                            <span class="font-semibold text-gray-800">
-                                Isya
-                            </span>
-
-                            <p class="text-xs text-gray-400">
-                                Sholat Isya
-                            </p>
-                        </div>
-
-                    </label>
-
-                </div>
-
-            </div>
-
-
-            {{-- =========================================
-                 KEGIATAN MEMBANTU ORANG TUA
-            ========================================== --}}
-            <div class="mb-6">
-
-                <label
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Kegiatan Membantu Orang Tua
-                </label>
-
-                <textarea
-                    name="kegiatan_membantu"
-                    rows="4"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    placeholder="Contoh: membantu membersihkan rumah..."
-                >{{ old('kegiatan_membantu') }}</textarea>
-
-            </div>
-
-
-            {{-- =========================================
-                 BELAJAR
-            ========================================== --}}
-            <div class="mb-6">
-
-                <label
-                    class="block text-sm font-semibold text-gray-700 mb-3"
-                >
-                    Apakah anak belajar hari ini?
-                </label>
-
-
-                <div class="flex gap-6">
-
-
-                    {{-- YA --}}
-                    <label class="flex items-center gap-2 cursor-pointer">
-
-                        <input
-                            type="radio"
-                            name="belajar"
-                            value="1"
-                            {{ old('belajar') === '1' ? 'checked' : '' }}
-                            class="w-4 h-4 text-indigo-600
-                                   focus:ring-indigo-500"
-                        >
-
-                        <span>
-                            Ya
-                        </span>
-
-                    </label>
-
-
-                    {{-- TIDAK --}}
-                    <label class="flex items-center gap-2 cursor-pointer">
-
-                        <input
-                            type="radio"
-                            name="belajar"
-                            value="0"
-                            {{ old('belajar') === '0' ? 'checked' : '' }}
-                            class="w-4 h-4 text-indigo-600
-                                   focus:ring-indigo-500"
-                        >
-
-                        <span>
-                            Tidak
-                        </span>
-
-                    </label>
-
-                </div>
-
-            </div>
-
-
-            {{-- =========================================
-                 JAM TIDUR MALAM
-            ========================================== --}}
-            <div class="mb-8">
-
-                <label
-                    class="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                    Jam Tidur Malam
-                </label>
-
-                <input
-                    type="text"
-                    name="tidur_malam"
-                    value="{{ old('tidur_malam') }}"
-                    placeholder="Contoh: 21:30"
-                    maxlength="5"
-                    inputmode="numeric"
-                    pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-3
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-
-                <p class="text-xs text-gray-400 mt-2">
-                    Gunakan format 24 jam, contoh:
-                    <span class="font-semibold">21:30</span>
-                </p>
-
-            </div>
-
-
-            {{-- =========================================
-                 BUTTON
-            ========================================== --}}
-            <div class="flex gap-3">
-
-
-                {{-- KEMBALI --}}
-                <a
-                    href="{{ route('orangtua.angket.index') }}"
-                    class="px-5 py-3 rounded-xl
-                           bg-gray-100 hover:bg-gray-200
-                           text-gray-700 font-semibold
-                           transition"
-                >
-                    Kembali
-                </a>
-
-
-                {{-- SIMPAN --}}
-                <button
-                    type="submit"
-                    class="px-5 py-3 rounded-xl
-                           bg-indigo-600 hover:bg-indigo-700
-                           text-white font-semibold
-                           transition"
-                >
-                    Simpan Angket
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
 
 </div>
+
+
+
+<a href="{{ route('orangtua.angket.index') }}"
+
+class="
+bg-slate-600
+hover:bg-slate-700
+text-white
+px-5
+py-3
+rounded-xl
+text-sm
+">
+
+← Kembali
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- DATA ANAK --}}
+
+
+<div class="
+bg-indigo-50
+border
+border-indigo-100
+rounded-2xl
+p-5
+">
+
+
+<div class="
+flex
+items-center
+gap-4
+">
+
+
+<div class="
+w-14
+h-14
+rounded-2xl
+bg-indigo-600
+text-white
+flex
+items-center
+justify-center
+text-xl
+font-bold
+">
+
+{{ strtoupper(substr($siswa->nama_siswa,0,1)) }}
+
+</div>
+
+
+
+
+<div>
+
+
+<h3 class="
+font-bold
+text-indigo-900
+">
+
+{{ $siswa->nama_siswa }}
+
+</h3>
+
+
+<p class="text-sm text-indigo-700">
+
+NIS : {{ $siswa->nis }}
+
+</p>
+
+
+<p class="text-sm text-indigo-700">
+
+Kelas :
+{{ $siswa->kelas->nama_kelas ?? '-' }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- FORM --}}
+
+
+<div class="
+bg-white
+rounded-2xl
+border
+p-6
+">
+
+
+<form
+
+action="{{ route('orangtua.angket.store') }}"
+
+method="POST"
+
+>
+
+
+@csrf
+
+
+
+@if(session('success'))
+
+<div class="
+bg-green-50
+border
+border-green-200
+text-green-700
+rounded-xl
+p-4
+mb-5
+">
+
+{{ session('success') }}
+
+</div>
+
+@endif
+
+
+
+
+@if(session('error'))
+
+<div class="
+bg-red-50
+border
+border-red-200
+text-red-700
+rounded-xl
+p-4
+mb-5
+">
+
+{{ session('error') }}
+
+</div>
+
+@endif
+
+
+
+
+
+@if($errors->any())
+
+
+<div class="
+bg-red-50
+border
+border-red-200
+text-red-700
+rounded-xl
+p-4
+mb-5
+">
+
+
+<ul class="list-disc ml-5">
+
+
+@foreach($errors->all() as $error)
+
+<li>
+{{ $error }}
+</li>
+
+@endforeach
+
+
+</ul>
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+@php
+
+$tanggalInput = old(
+'tanggal',
+$tanggalHariIni
+);
+
+
+$statusTelat =
+$tanggalInput != $tanggalHariIni;
+
+
+@endphp
+
+
+
+
+
+
+@if($statusTelat)
+
+<div class="
+bg-yellow-50
+border
+border-yellow-200
+text-yellow-700
+rounded-xl
+p-4
+mb-5
+">
+
+
+⚠️ Aktivitas tanggal:
+
+<b>
+{{ $tanggalInput }}
+</b>
+
+
+<br>
+
+Tercatat sebagai:
+
+<b>
+Telat Isi
+</b>
+
+
+</div>
+
+
+@else
+
+
+<div class="
+bg-blue-50
+border
+border-blue-200
+text-blue-700
+rounded-xl
+p-4
+mb-5
+">
+
+ℹ️ Angket dapat diisi hari ini atau maksimal satu hari sebelumnya.
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+
+
+{{-- TANGGAL --}}
+
+
+<div class="
+grid
+md:grid-cols-2
+gap-5
+">
+
+
+
+<div>
+
+
+<label class="
+text-sm
+font-semibold
+text-slate-700
+">
+
+Tanggal Aktivitas
+
+</label>
+
+
+<input
+
+type="date"
+
+name="tanggal"
+
+value="{{ $tanggalInput }}"
+
+max="{{ $tanggalHariIni }}"
+
+min="{{ \Carbon\Carbon::yesterday()->format('Y-m-d') }}"
+
+class="
+mt-2
+w-full
+border
+rounded-xl
+px-4
+py-3
+"
+
+>
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+<label class="
+text-sm
+font-semibold
+text-slate-700
+">
+
+Bangun Pagi
+
+</label>
+
+
+<input
+
+type="time"
+
+name="bangun_pagi"
+
+value="{{ old('bangun_pagi') }}"
+
+class="
+mt-2
+w-full
+border
+rounded-xl
+px-4
+py-3
+"
+
+>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- IBADAH --}}
+
+
+<div class="mt-6">
+
+
+<h3 class="
+font-semibold
+text-slate-800
+mb-4
+">
+
+Ibadah Harian
+
+</h3>
+
+
+
+
+<div class="
+grid
+md:grid-cols-5
+gap-3
+">
+
+
+@php
+
+$ibadah = [
+
+'sholat_subuh'=>'Subuh',
+
+'sholat_dzuhur'=>'Dzuhur',
+
+'sholat_ashar'=>'Ashar',
+
+'sholat_magrib'=>'Magrib',
+
+'sholat_isya'=>'Isya'
+
+];
+
+@endphp
+
+
+
+
+
+@foreach($ibadah as $key=>$label)
+
+
+<label class="
+flex
+items-center
+gap-3
+border
+rounded-xl
+p-4
+cursor-pointer
+hover:bg-slate-50
+">
+
+
+<input
+
+type="checkbox"
+
+name="{{ $key }}"
+
+value="1"
+
+class="sholat-check rounded text-indigo-600"
+
+{{ old($key) ? 'checked':'' }}
+
+>
+
+
+<span class="text-sm">
+
+{{ $label }}
+
+</span>
+
+
+</label>
+
+
+@endforeach
+
+
+</div>
+
+
+
+
+
+
+
+{{-- ALASAN TIDAK SHOLAT --}}
+
+
+<div
+
+id="boxAlasan"
+
+class="
+mt-5
+{{ old('alasan_tidak_sholat') ? '' : 'hidden' }}
+"
+
+>
+
+<label class="
+text-sm
+font-semibold
+text-slate-700
+">
+
+Keterangan Ibadah
+
+</label>
+
+
+
+<p class="
+text-xs
+text-slate-500
+mt-1
+">
+
+Tuliskan keterangan apabila ada ibadah yang tidak dilakukan, misalnya sedang berhalangan, sakit, atau kondisi lainnya.
+
+</p>
+
+
+<textarea
+
+name="alasan_tidak_sholat"
+
+rows="3"
+
+class="
+mt-3
+w-full
+border
+rounded-xl
+px-4
+py-3
+"
+
+placeholder="Contoh: sedang berhalangan, sakit, atau ada kondisi tertentu"
+
+>{{ old('alasan_tidak_sholat') }}</textarea>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- AKTIVITAS ANAK --}}
+
+
+<div class="mt-6">
+
+
+<h3 class="
+font-semibold
+text-slate-800
+mb-4
+">
+
+Aktivitas Anak
+
+</h3>
+
+
+
+
+{{-- BELAJAR --}}
+
+<label class="
+text-sm
+font-semibold
+">
+
+Belajar
+
+</label>
+
+
+
+<div class="
+flex
+gap-5
+mt-3
+">
+
+
+<label class="flex items-center gap-2">
+
+
+<input
+
+type="radio"
+
+name="belajar"
+
+value="1"
+
+{{ old('belajar')=='1'?'checked':'' }}
+
+>
+
+Ya
+
+</label>
+
+
+
+
+<label class="flex items-center gap-2">
+
+
+<input
+
+type="radio"
+
+name="belajar"
+
+value="0"
+
+{{ old('belajar')=='0'?'checked':'' }}
+
+>
+
+Tidak
+
+</label>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+{{-- MAKANAN BERGIZI --}}
+
+<div class="mt-6">
+
+
+<h3 class="
+font-semibold
+text-slate-800
+mb-4
+">
+
+Makanan Bergizi (Isi Piringku)
+
+</h3>
+
+
+<div class="
+grid
+md:grid-cols-3
+gap-3
+">
+
+
+<label class="
+flex
+items-center
+gap-3
+border
+rounded-xl
+p-4
+cursor-pointer
+hover:bg-slate-50
+">
+
+
+<input
+
+type="checkbox"
+
+name="sarapan"
+
+value="1"
+
+class="rounded text-indigo-600"
+
+{{ old('sarapan') ? 'checked':'' }}
+
+>
+
+
+<span class="text-sm">
+
+Sarapan
+
+</span>
+
+
+</label>
+
+
+
+
+<label class="
+flex
+items-center
+gap-3
+border
+rounded-xl
+p-4
+cursor-pointer
+hover:bg-slate-50
+">
+
+
+<input
+
+type="checkbox"
+
+name="makan_siang"
+
+value="1"
+
+class="rounded text-indigo-600"
+
+{{ old('makan_siang') ? 'checked':'' }}
+
+>
+
+
+<span class="text-sm">
+
+Makan Siang
+
+</span>
+
+
+</label>
+
+
+
+
+<label class="
+flex
+items-center
+gap-3
+border
+rounded-xl
+p-4
+cursor-pointer
+hover:bg-slate-50
+">
+
+
+<input
+
+type="checkbox"
+
+name="makan_malam"
+
+value="1"
+
+class="rounded text-indigo-600"
+
+{{ old('makan_malam') ? 'checked':'' }}
+
+>
+
+
+<span class="text-sm">
+
+Makan Malam
+
+</span>
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{{-- OLAHRAGA --}}
+
+<div class="mt-6">
+
+
+<h3 class="
+font-semibold
+text-slate-800
+mb-4
+">
+
+Olahraga
+
+</h3>
+
+
+
+<div class="
+flex
+gap-5
+mt-3
+">
+
+
+<label class="flex items-center gap-2">
+
+
+<input
+
+type="radio"
+
+name="olahraga"
+
+value="1"
+
+{{ old('olahraga')=='1'?'checked':'' }}
+
+>
+
+Ya
+
+</label>
+
+
+
+
+<label class="flex items-center gap-2">
+
+
+<input
+
+type="radio"
+
+name="olahraga"
+
+value="0"
+
+{{ old('olahraga')=='0'?'checked':'' }}
+
+>
+
+Tidak
+
+</label>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="mt-5">
+
+
+<label class="
+text-sm
+font-semibold
+">
+
+Kegiatan Membantu
+
+</label>
+
+
+
+<textarea
+
+name="kegiatan_membantu"
+
+rows="3"
+
+class="
+mt-2
+w-full
+border
+rounded-xl
+px-4
+py-3
+"
+
+placeholder="Contoh: membantu membersihkan rumah, membantu orang tua"
+
+>{{ old('kegiatan_membantu') }}</textarea>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="mt-5">
+
+
+<label class="
+text-sm
+font-semibold
+">
+
+Tidur Malam
+
+</label>
+
+
+
+<input
+
+type="time"
+
+name="tidur_malam"
+
+value="{{ old('tidur_malam') }}"
+
+class="
+mt-2
+w-full
+border
+rounded-xl
+px-4
+py-3
+"
+
+>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- BUTTON --}}
+
+
+<div class="
+flex
+justify-end
+gap-3
+mt-8
+">
+
+
+<a href="{{ route('orangtua.angket.index') }}"
+
+class="
+px-5
+py-3
+rounded-xl
+border
+text-slate-600
+">
+
+Batal
+
+</a>
+
+
+
+<button
+
+type="submit"
+
+class="
+bg-indigo-600
+hover:bg-indigo-700
+text-white
+px-6
+py-3
+rounded-xl
+font-semibold
+"
+
+>
+
+Simpan Angket
+
+</button>
+
+
+
+</div>
+
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- RIWAYAT TERAKHIR --}}
+
+
+<div class="
+bg-white
+rounded-2xl
+border
+p-6
+">
+
+
+<h3 class="
+font-bold
+text-slate-800
+mb-5
+">
+
+Riwayat Angket Terakhir
+
+</h3>
+
+
+
+
+
+@php
+
+$riwayat = $siswa
+->angketHarians()
+->orderBy(
+'tanggal',
+'desc'
+)
+->take(3)
+->get();
+
+
+@endphp
+
+
+
+
+
+@if($riwayat->count())
+
+
+
+<div class="space-y-4">
+
+
+
+@foreach($riwayat as $item)
+
+
+
+@php
+
+$tanggalAktivitas =
+\Carbon\Carbon::parse(
+$item->tanggal
+)->format('Y-m-d');
+
+
+$tanggalIsi =
+$item->tanggal_pengisian
+?
+\Carbon\Carbon::parse(
+$item->tanggal_pengisian
+)->format('Y-m-d')
+:
+null;
+
+
+@endphp
+
+
+
+
+
+
+<div class="
+border
+rounded-xl
+p-5
+">
+
+
+<div class="
+flex
+justify-between
+">
+
+
+<div>
+
+
+<p class="font-semibold">
+
+{{
+
+\Carbon\Carbon::parse(
+$item->tanggal
+)->format('d-m-Y')
+
+}}
+
+</p>
+
+
+<p class="text-xs text-slate-500">
+
+Diisi:
+
+{{
+
+$item->tanggal_pengisian
+
+?
+
+\Carbon\Carbon::parse(
+$item->tanggal_pengisian
+)->format('d-m-Y H:i')
+
+:
+
+'-'
+
+}}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+@if($tanggalAktivitas == $tanggalIsi)
+
+
+<span class="
+bg-emerald-100
+text-emerald-700
+px-3
+py-1
+rounded-full
+text-xs
+">
+
+✓ Tepat Waktu
+
+</span>
+
+
+
+@else
+
+
+<span class="
+bg-yellow-100
+text-yellow-700
+px-3
+py-1
+rounded-full
+text-xs
+">
+
+⚠ Telat
+
+</span>
+
+
+
+@endif
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="
+mt-4
+grid
+md:grid-cols-3
+gap-3
+text-sm
+">
+
+
+
+<div>
+
+Belajar:
+
+<b>
+
+{{ $item->belajar ? 'Ya':'Tidak' }}
+
+</b>
+
+</div>
+
+
+
+
+
+<div>
+
+Ibadah:
+
+<b>
+
+{{
+
+$item->sholat_subuh +
+$item->sholat_dzuhur +
+$item->sholat_ashar +
+$item->sholat_magrib +
+$item->sholat_isya
+
+}} / 5
+
+</b>
+
+</div>
+
+
+
+
+
+<div>
+
+Tidur:
+
+<b>
+
+{{ $item->tidur_malam ?? '-' }}
+
+</b>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+@if($item->alasan_tidak_sholat)
+
+
+<div class="
+mt-4
+bg-red-50
+border
+border-red-100
+rounded-xl
+p-3
+text-sm
+">
+
+
+<p class="
+font-semibold
+text-red-700
+">
+
+Keterangan Tidak Sholat
+
+</p>
+
+
+
+<p class="
+text-red-600
+mt-1
+">
+
+{{ $item->alasan_tidak_sholat }}
+
+</p>
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+
+@if($item->kegiatan_membantu)
+
+
+<div class="
+mt-4
+bg-slate-50
+rounded-xl
+p-3
+text-sm
+">
+
+
+<p class="font-semibold">
+
+Kegiatan Membantu
+
+</p>
+
+
+<p class="mt-1">
+
+{{ $item->kegiatan_membantu }}
+
+</p>
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+</div>
+
+
+
+
+@endforeach
+
+
+
+</div>
+
+
+
+
+@else
+
+
+<p class="text-sm text-slate-500">
+
+Belum ada riwayat angket.
+
+</p>
+
+
+@endif
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+
+document.addEventListener(
+'DOMContentLoaded',
+function(){
+
+
+const form = document.querySelector(
+'form[action="{{ route('orangtua.angket.store') }}"]'
+);
+
+
+
+if(form)
+{
+
+
+const button =
+form.querySelector(
+'button[type="submit"]'
+);
+
+
+
+form.addEventListener(
+'submit',
+function(){
+
+
+button.disabled = true;
+
+
+button.innerHTML =
+'Menyimpan...';
+
+
+}
+
+);
+
+
+}
+
+
+
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+
+
+document.addEventListener(
+'DOMContentLoaded',
+function(){
+
+
+
+const sholat =
+document.querySelectorAll('.sholat-check');
+
+
+
+const alasan =
+document.getElementById('boxAlasan');
+
+
+
+
+
+function cekSholat()
+{
+
+
+let adaTidak = false;
+
+
+
+sholat.forEach(
+function(item)
+{
+
+
+if(!item.checked)
+{
+
+adaTidak = true;
+
+}
+
+
+});
+
+
+
+
+
+if(adaTidak)
+{
+
+
+alasan.classList.remove(
+'hidden'
+);
+
+
+}
+
+else
+{
+
+
+alasan.classList.add(
+'hidden'
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+sholat.forEach(
+function(item)
+{
+
+
+item.addEventListener(
+'change',
+cekSholat
+);
+
+
+});
+
+
+
+cekSholat();
+
+
+
+});
+
+</script>
+
+
+
+
 
 @endsection

@@ -269,7 +269,7 @@
                 <div class="hidden sm:block">
 
                     <p class="text-xs font-medium uppercase tracking-wider text-slate-400">
-                        KAIH App
+                        G7KAIH
                     </p>
 
                     <h2 class="text-xl font-bold text-slate-900">

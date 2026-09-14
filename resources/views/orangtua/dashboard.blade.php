@@ -1,295 +1,1004 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.orangtua')
 
-<head>
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+@section('title','Dashboard Orang Tua')
 
-    <title>
-        Dashboard Orang Tua - KAIH App
-    </title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+@section('page-title','Dashboard Orang Tua')
 
-<body class="bg-gray-50 min-h-screen">
 
-    {{-- HEADER --}}
-    <header class="bg-white border-b border-gray-200">
 
-        <div class="max-w-7xl mx-auto px-6 py-4">
+@section('content')
 
-            <div class="flex items-center justify-between">
 
-                {{-- LOGO --}}
-                <div class="flex items-center gap-3">
+<div class="space-y-6">
 
-                    <div
-                        class="w-11 h-11 bg-indigo-600
-                               rounded-xl flex items-center
-                               justify-center text-white text-xl"
-                    >
-                        🎓
-                    </div>
 
-                    <div>
-                        <h1 class="text-xl font-bold text-gray-900">
-                            KAIH App
-                        </h1>
 
-                        <p class="text-sm text-gray-500">
-                            Sistem Informasi Akademik
-                        </p>
-                    </div>
+{{-- HEADER --}}
 
-                </div>
+<div class="
+bg-white
+rounded-2xl
+border
+p-6
+flex
+justify-between
+items-center
+">
 
 
-                {{-- USER --}}
-                <div class="flex items-center gap-3">
+<div>
 
-                    <div
-                        class="w-10 h-10 bg-indigo-100
-                               rounded-full flex items-center
-                               justify-center text-indigo-600
-                               font-bold"
-                    >
-                        {{ strtoupper(substr($user->name ?? 'O', 0, 1)) }}
-                    </div>
+<h1 class="
+text-2xl
+font-bold
+text-slate-800
+">
 
-                    <div class="hidden sm:block">
+Dashboard Orang Tua
 
-                        <p class="font-semibold text-gray-800">
-                            {{ $user->name ?? 'Orang Tua' }}
-                        </p>
+</h1>
 
-                        <p class="text-sm text-gray-500">
-                            Orang Tua
-                        </p>
 
-                    </div>
+<p class="
+text-sm
+text-slate-500
+mt-1
+">
 
-                </div>
+Selamat datang,
+{{ auth()->user()->name }}
 
-            </div>
+</p>
 
-        </div>
 
-    </header>
+</div>
 
 
-    {{-- NAVIGATION --}}
-    <nav class="bg-white border-b border-gray-100">
 
-        <div class="max-w-7xl mx-auto px-6">
+<a href="{{ route('orangtua.angket.index') }}"
 
-            <div class="flex items-center gap-6 py-3">
+class="
+bg-indigo-600
+hover:bg-indigo-700
+text-white
+px-5
+py-3
+rounded-xl
+text-sm
+font-semibold
+">
 
-                <a
-                    href="{{ route('orangtua.dashboard') }}"
-                    class="text-indigo-600 font-semibold"
-                >
-                    🏠 Dashboard
-                </a>
+Riwayat Angket
 
-                <a
-                    href="{{ route('orangtua.angket.index') }}"
-                    class="text-gray-600 hover:text-indigo-600
-                           font-medium transition"
-                >
-                    📝 Angket Harian
-                </a>
+</a>
 
-                <form
-                    action="{{ route('logout') }}"
-                    method="POST"
-                    class="ml-auto"
-                >
-                    @csrf
 
-                    <button
-                        type="submit"
-                        class="text-red-500 hover:text-red-600
-                               font-medium"
-                    >
-                        Keluar
-                    </button>
+</div>
 
-                </form>
 
-            </div>
 
-        </div>
 
-    </nav>
 
 
-    {{-- CONTENT --}}
-    <main class="max-w-7xl mx-auto px-6 py-8">
 
-        {{-- HEADER --}}
-        <div class="mb-8">
 
-            <p class="text-sm font-semibold text-indigo-600 mb-1">
-                DASHBOARD ORANG TUA
-            </p>
 
-            <h2 class="text-3xl font-bold text-gray-900">
-                Selamat Datang 👋
-            </h2>
+{{-- PROFIL SISWA --}}
 
-            <p class="text-gray-500 mt-2">
-                Pantau kegiatan dan kebiasaan harian anak.
-            </p>
 
-        </div>
+<div class="
+bg-white
+rounded-2xl
+border
+p-6
+">
 
 
-        {{-- DATA ANAK --}}
-        <div
-            class="bg-white rounded-2xl
-                   border border-gray-100
-                   shadow-sm p-6 mb-6"
-        >
+<div class="
+flex
+items-center
+gap-5
+">
 
-            <div class="flex items-center gap-4">
 
-                <div
-                    class="w-14 h-14 bg-indigo-100
-                           rounded-2xl flex items-center
-                           justify-center text-2xl"
-                >
-                    👨‍🎓
-                </div>
+<div class="
+w-16
+h-16
+rounded-2xl
+bg-indigo-100
+text-indigo-700
+flex
+items-center
+justify-center
+text-2xl
+font-bold
+">
 
-                <div>
+{{ strtoupper(substr($siswa->nama_siswa,0,1)) }}
 
-                    <p class="text-sm text-gray-500">
-                        Anak Anda
-                    </p>
+</div>
 
-                    <h3 class="text-xl font-bold text-gray-900">
 
-                        {{ $orangTua->siswa->nama_siswa ?? 'Belum ada siswa' }}
 
-                    </h3>
 
-                    @if($orangTua->siswa)
+<div>
 
-                        <p class="text-sm text-gray-500 mt-1">
 
-                            NIS:
-                            {{ $orangTua->siswa->nis }}
+<h2 class="
+text-xl
+font-bold
+">
 
-                            @if($orangTua->siswa->kelas)
-                                — Kelas
-                                {{ $orangTua->siswa->kelas->nama_kelas }}
-                            @endif
+{{ $siswa->nama_siswa }}
 
-                        </p>
+</h2>
 
-                    @endif
 
-                </div>
+<p class="text-sm text-slate-500">
 
-            </div>
+NIS :
+{{ $siswa->nis }}
 
-        </div>
+</p>
 
 
-        {{-- MENU --}}
-        <div class="grid md:grid-cols-2 gap-6">
+<p class="text-sm text-slate-500">
 
+Kelas :
+{{ $siswa->kelas->nama_kelas ?? '-' }}
 
-            {{-- ANGKET --}}
-            <div
-                class="bg-white rounded-2xl
-                       border border-gray-100
-                       shadow-sm p-6"
-            >
+</p>
 
-                <div
-                    class="w-12 h-12 bg-indigo-100
-                           rounded-xl flex items-center
-                           justify-center text-xl mb-4"
-                >
-                    📝
-                </div>
 
-                <h3 class="text-xl font-bold text-gray-900">
-                    Angket Harian
-                </h3>
+<p class="text-sm text-slate-500">
 
-                <p class="text-gray-500 mt-2 mb-5">
-                    Isi kebiasaan harian anak seperti
-                    sholat, belajar, membantu orang tua,
-                    bangun pagi, dan tidur malam.
-                </p>
+Jurusan :
+{{ $siswa->kelas->jurusan->nama_jurusan ?? '-' }}
 
-                <a
-                    href="{{ route('orangtua.angket.create') }}"
-                    class="inline-flex items-center
-                           justify-center
-                           bg-indigo-600
-                           hover:bg-indigo-700
-                           text-white font-semibold
-                           px-5 py-3 rounded-xl
-                           transition"
-                >
-                    Isi Angket Hari Ini
-                </a>
+</p>
 
-            </div>
 
+</div>
 
-            {{-- RIWAYAT --}}
-            <div
-                class="bg-white rounded-2xl
-                       border border-gray-100
-                       shadow-sm p-6"
-            >
 
-                <div
-                    class="w-12 h-12 bg-green-100
-                           rounded-xl flex items-center
-                           justify-center text-xl mb-4"
-                >
-                    📊
-                </div>
+</div>
 
-                <h3 class="text-xl font-bold text-gray-900">
-                    Riwayat Angket
-                </h3>
 
-                <p class="text-gray-500 mt-2 mb-5">
-                    Lihat data angket harian yang sudah
-                    diisi sebelumnya.
-                </p>
+</div>
 
-                <a
-                    href="{{ route('orangtua.angket.index') }}"
-                    class="inline-flex items-center
-                           justify-center
-                           bg-gray-100
-                           hover:bg-gray-200
-                           text-gray-700
-                           font-semibold
-                           px-5 py-3 rounded-xl
-                           transition"
-                >
-                    Lihat Riwayat
-                </a>
 
-            </div>
 
-        </div>
 
-    </main>
 
-</body>
 
-</html>
+
+
+
+{{-- STATISTIK UTAMA --}}
+
+
+<div class="
+grid
+md:grid-cols-4
+gap-5
+">
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+<p class="text-sm text-slate-500">
+
+Skor Terakhir
+
+</p>
+
+
+<h2 class="
+text-4xl
+font-bold
+text-indigo-600
+mt-3
+">
+
+{{ $skorTerakhir }}
+
+<span class="text-lg text-slate-400">
+/100
+</span>
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+
+<p class="text-sm text-slate-500">
+
+Kategori
+
+</p>
+
+
+
+@if($kategoriTerakhir == 'Baik')
+
+<span class="
+inline-block
+mt-3
+px-3
+py-1
+rounded-full
+bg-green-100
+text-green-700
+text-sm
+font-semibold
+">
+
+🟢 Baik
+
+</span>
+
+
+
+@elseif($kategoriTerakhir == 'Perlu Perhatian')
+
+
+<span class="
+inline-block
+mt-3
+px-3
+py-1
+rounded-full
+bg-yellow-100
+text-yellow-700
+text-sm
+font-semibold
+">
+
+🟡 Perlu Perhatian
+
+</span>
+
+
+
+@else
+
+
+<span class="
+inline-block
+mt-3
+px-3
+py-1
+rounded-full
+bg-red-100
+text-red-700
+text-sm
+font-semibold
+">
+
+🔴 Perlu Pendampingan
+
+</span>
+
+
+@endif
+
+
+</div>
+
+
+
+
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+
+<p class="text-sm text-slate-500">
+
+Ibadah Hari Ini
+
+</p>
+
+
+<h2 class="
+text-3xl
+font-bold
+text-blue-600
+mt-3
+">
+
+{{ $jumlahIbadahHariIni }}/5
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+
+<p class="text-sm text-slate-500">
+
+Belajar Hari Ini
+
+</p>
+
+
+<h2 class="
+text-3xl
+font-bold
+text-emerald-600
+mt-3
+">
+
+{{ $statusBelajarHariIni ? 'Ya':'Tidak' }}
+
+</h2>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- STATUS ANGKET --}}
+
+
+@if(!$angketHariIni)
+
+
+<div class="
+bg-yellow-50
+border
+border-yellow-200
+rounded-2xl
+p-5
+">
+
+
+<p class="
+font-semibold
+text-yellow-700
+">
+
+⚠️ Angket hari ini belum diisi.
+
+</p>
+
+
+<a href="{{ route('orangtua.angket.create') }}"
+
+class="
+inline-block
+mt-3
+bg-indigo-600
+text-white
+px-5
+py-2
+rounded-lg
+text-sm
+">
+
+Isi Angket Sekarang
+
+</a>
+
+
+</div>
+
+
+@else
+
+
+<div class="
+bg-green-50
+border
+border-green-200
+rounded-2xl
+p-5
+">
+
+
+<p class="
+font-semibold
+text-green-700
+">
+
+✓ Angket hari ini sudah diisi.
+
+</p>
+
+
+<p class="
+text-sm
+text-green-600
+mt-1
+">
+
+Skor hari ini:
+{{ $angketHariIni->skor }}/100
+
+</p>
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+{{-- KETERANGAN TIDAK SHOLAT --}}
+
+
+@if($alasanTidakSholat)
+
+
+<div class="
+bg-red-50
+border
+border-red-200
+rounded-2xl
+p-5
+">
+
+
+<h3 class="
+font-bold
+text-red-700
+">
+
+Keterangan Tidak Sholat
+
+</h3>
+
+
+<p class="
+text-sm
+text-red-600
+mt-2
+">
+
+{{ $alasanTidakSholat }}
+
+</p>
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+
+
+{{-- RINCIAN SKOR --}}
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-6
+">
+
+
+<h3 class="
+font-bold
+mb-5
+">
+
+Rincian Penilaian Terakhir
+
+</h3>
+
+
+
+<div class="
+grid
+md:grid-cols-4
+gap-4
+">
+
+
+@foreach($rincianSkor as $nama=>$nilai)
+
+
+<div class="
+bg-slate-50
+rounded-xl
+p-4
+">
+
+
+<p class="
+text-xs
+text-slate-500
+">
+
+{{ $nama }}
+
+</p>
+
+
+<p class="
+text-xl
+font-bold
+mt-2
+{{ $nilai >0 ? 'text-indigo-600':'text-slate-400' }}
+">
+
+{{ $nilai }}
+
+</p>
+
+
+</div>
+
+
+@endforeach
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- PERKEMBANGAN --}}
+
+
+<div class="
+grid
+md:grid-cols-3
+gap-5
+">
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+<p class="text-sm text-slate-500">
+Konsistensi Belajar
+</p>
+
+
+<h2 class="
+text-3xl
+font-bold
+text-green-600
+mt-2
+">
+
+{{ $persentaseBelajar }}%
+
+</h2>
+
+</div>
+
+
+
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+<p class="text-sm text-slate-500">
+Kepatuhan Ibadah
+</p>
+
+
+<h2 class="
+text-3xl
+font-bold
+text-blue-600
+mt-2
+">
+
+{{ $persentaseIbadah }}%
+
+</h2>
+
+</div>
+
+
+
+
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-5
+">
+
+<p class="text-sm text-slate-500">
+Total Pengisian
+</p>
+
+
+<h2 class="
+text-3xl
+font-bold
+text-purple-600
+mt-2
+">
+
+{{ $siswa->angketHarian->count() }}
+
+Hari
+
+</h2>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- GRAFIK --}}
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-6
+">
+
+
+<h3 class="
+font-bold
+mb-5
+">
+
+Grafik Perkembangan 7 Hari
+
+</h3>
+
+
+<canvas id="perkembanganChart"></canvas>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- RIWAYAT --}}
+
+
+<div class="
+bg-white
+border
+rounded-2xl
+p-6
+">
+
+
+<h3 class="
+font-bold
+mb-5
+">
+
+Aktivitas Terakhir
+
+</h3>
+
+
+
+<div class="space-y-4">
+
+
+@forelse($riwayatTerbaru as $item)
+
+
+
+<div class="
+border
+rounded-xl
+p-4
+">
+
+
+<div class="
+flex
+justify-between
+">
+
+
+<b>
+
+{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+
+</b>
+
+
+
+<span class="
+text-indigo-600
+font-semibold
+">
+
+{{ $item->skor }}/100
+
+</span>
+
+
+</div>
+
+
+
+
+<p class="text-sm mt-2">
+
+Ibadah:
+
+{{
+
+$item->sholat_subuh+
+$item->sholat_dzuhur+
+$item->sholat_ashar+
+$item->sholat_magrib+
+$item->sholat_isya
+
+}}/5
+
+</p>
+
+
+
+
+<p class="text-sm">
+
+Belajar:
+
+{{ $item->belajar ? 'Ya':'Tidak' }}
+
+</p>
+
+
+
+
+<p class="text-sm">
+
+Tidur:
+
+{{ $item->tidur_malam ?? '-' }}
+
+</p>
+
+
+
+
+
+@if($item->alasan_tidak_sholat)
+
+
+<p class="
+text-sm
+text-red-600
+mt-2
+">
+
+Keterangan:
+
+{{ $item->alasan_tidak_sholat }}
+
+</p>
+
+
+@endif
+
+
+
+</div>
+
+
+
+
+@empty
+
+
+<p class="text-sm text-slate-500">
+
+Belum ada aktivitas.
+
+</p>
+
+
+@endforelse
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+
+new Chart(
+document.getElementById('perkembanganChart'),
+{
+
+type:'line',
+
+data:{
+
+
+labels:@json($grafikTanggal),
+
+
+datasets:[
+
+{
+
+label:'Skor',
+
+data:@json($grafikSkor),
+
+borderWidth:3,
+
+tension:.3
+
+},
+
+
+{
+
+label:'Ibadah %',
+
+data:@json($grafikIbadah),
+
+borderWidth:2,
+
+borderDash:[5,5],
+
+tension:.3
+
+}
+
+]
+
+
+},
+
+
+options:{
+
+responsive:true,
+
+
+scales:{
+
+y:{
+
+beginAtZero:true,
+
+max:100
+
+}
+
+}
+
+
+}
+
+
+}
+
+);
+
+
+</script>
+
+
+
+@endsection
