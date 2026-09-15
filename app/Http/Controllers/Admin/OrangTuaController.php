@@ -6,24 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\OrangTua;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Imports\OrangTuaImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrangTuaController extends Controller
 {
     /**
-     * Menampilkan data orang tua
+     * =========================================================
+     * MENAMPILKAN DATA ORANG TUA
+     * =========================================================
      */
     public function index(Request $request)
     {
-        // Ambil semua kelas untuk card kelas di halaman Orang Tua
+        // Ambil semua kelas untuk card kelas
         $kelas = Kelas::with('jurusan')
             ->withCount('siswas')
             ->orderBy('nama_kelas', 'asc')
             ->get();
 
         // Ambil data orang tua
-        // Menggunakan paginate karena Blade memakai:
-        // total(), firstItem(), dan links()
         $orangTuas = OrangTua::with([
             'siswa',
             'siswa.kelas'
@@ -40,23 +42,23 @@ class OrangTuaController extends Controller
 
 
     /**
-     * Menampilkan data orang tua berdasarkan kelas
+     * =========================================================
+     * MENAMPILKAN DATA ORANG TUA BERDASARKAN KELAS
+     * =========================================================
      */
     public function kelas($id)
     {
-        // Pastikan kelas yang dipilih memang ada
+        // Pastikan kelas tersedia
         $kelasTerpilih = Kelas::with('jurusan')
             ->findOrFail($id);
 
         // Ambil semua kelas
-        // Dibutuhkan oleh card kelas pada Blade
         $kelas = Kelas::with('jurusan')
             ->withCount('siswas')
             ->orderBy('nama_kelas', 'asc')
             ->get();
 
-        // Ambil orang tua yang siswanya berada
-        // pada kelas yang dipilih
+        // Ambil orang tua berdasarkan kelas siswa
         $orangTuas = OrangTua::with([
             'siswa',
             'siswa.kelas'
@@ -80,11 +82,13 @@ class OrangTuaController extends Controller
 
 
     /**
-     * Menampilkan form tambah orang tua
+     * =========================================================
+     * FORM TAMBAH ORANG TUA
+     * =========================================================
      */
     public function create()
     {
-        // Ambil data siswa untuk pilihan pada form tambah orang tua
+        // Ambil data siswa untuk pilihan
         $siswas = Siswa::with('kelas')
             ->orderBy('nama_siswa', 'asc')
             ->get();
@@ -97,7 +101,9 @@ class OrangTuaController extends Controller
 
 
     /**
-     * Menyimpan data orang tua
+     * =========================================================
+     * SIMPAN ORANG TUA BARU
+     * =========================================================
      */
     public function store(Request $request)
     {
@@ -114,12 +120,45 @@ class OrangTuaController extends Controller
 
         return redirect()
             ->route('orangtua.index')
-            ->with('success', 'Data orang tua berhasil ditambahkan.');
+            ->with(
+                'success',
+                'Data orang tua berhasil ditambahkan.'
+            );
     }
 
 
     /**
-     * Menampilkan form edit orang tua
+     * =========================================================
+     * IMPORT EXCEL
+     * =========================================================
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'File Excel wajib dipilih.',
+            'file.mimes' => 'File harus berformat XLS atau XLSX.',
+        ]);
+
+        Excel::import(
+            new OrangTuaImport,
+            $request->file('file')
+        );
+
+        return redirect()
+            ->route('orangtua.index')
+            ->with(
+                'success',
+                'Data orang tua berhasil diimport.'
+            );
+    }
+
+
+    /**
+     * =========================================================
+     * FORM EDIT ORANG TUA
+     * =========================================================
      */
     public function edit($id)
     {
@@ -136,7 +175,9 @@ class OrangTuaController extends Controller
 
 
     /**
-     * Mengupdate data orang tua
+     * =========================================================
+     * UPDATE ORANG TUA
+     * =========================================================
      */
     public function update(Request $request, $id)
     {
@@ -155,12 +196,17 @@ class OrangTuaController extends Controller
 
         return redirect()
             ->route('orangtua.index')
-            ->with('success', 'Data orang tua berhasil diperbarui.');
+            ->with(
+                'success',
+                'Data orang tua berhasil diperbarui.'
+            );
     }
 
 
     /**
-     * Menghapus data orang tua
+     * =========================================================
+     * HAPUS ORANG TUA
+     * =========================================================
      */
     public function destroy($id)
     {
@@ -170,6 +216,9 @@ class OrangTuaController extends Controller
 
         return redirect()
             ->route('orangtua.index')
-            ->with('success', 'Data orang tua berhasil dihapus.');
+            ->with(
+                'success',
+                'Data orang tua berhasil dihapus.'
+            );
     }
 }
